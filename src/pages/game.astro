@@ -1,0 +1,54 @@
+---
+const pageTitle = "Mini Game";
+export const prerender = true;
+---
+
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <link rel="stylesheet" href="/src/styles/global.css">
+</head>
+<body class="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center">
+    <header class="absolute top-4 left-4">
+        <a href="/" class="text-orange-400 hover:text-orange-300">&larr; Home</a>
+    </header>
+    <h1 class="text-4xl mb-8">じゃんけんゲーム</h1>
+    <div id="game" class="flex flex-col items-center space-y-4">
+        <div class="flex space-x-4">
+            <button data-choice="rock" class="px-4 py-2 bg-orange-600 rounded">グー</button>
+            <button data-choice="paper" class="px-4 py-2 bg-orange-600 rounded">パー</button>
+            <button data-choice="scissors" class="px-4 py-2 bg-orange-600 rounded">チョキ</button>
+        </div>
+        <p id="result" class="text-xl"></p>
+    </div>
+
+    <script>
+        const buttons = document.querySelectorAll('button[data-choice]');
+        const resultEl = document.getElementById('result');
+        const choices = ['rock', 'paper', 'scissors'];
+
+        function play(userChoice) {
+            const cpuChoice = choices[Math.floor(Math.random() * choices.length)];
+            if (userChoice === cpuChoice) {
+                resultEl.textContent = 'あいこ！';
+            } else if (
+                (userChoice === 'rock' && cpuChoice === 'scissors') ||
+                (userChoice === 'paper' && cpuChoice === 'rock') ||
+                (userChoice === 'scissors' && cpuChoice === 'paper')
+            ) {
+                resultEl.textContent = 'あなたの勝ち！';
+            } else {
+                resultEl.textContent = 'あなたの負け！';
+            }
+        }
+
+        buttons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                play(btn.dataset.choice);
+            });
+        });
+    </script>
+</body>
+</html>
