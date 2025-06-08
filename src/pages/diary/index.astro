@@ -2,7 +2,12 @@
 const pageTitle = "Diary";
 export const prerender = true;
 const entries = await Astro.glob('./*.md');
-entries.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
+const entriesWithParsedDates = entries.map(entry => ({
+    ...entry,
+    parsedDate: new Date(entry.frontmatter.date),
+}));
+entriesWithParsedDates.sort((a, b) => b.parsedDate - a.parsedDate);
+const sortedEntries = entriesWithParsedDates.map(({ parsedDate, ...entry }) => entry);
 ---
 
 <html lang="ja">
