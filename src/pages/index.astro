@@ -73,7 +73,7 @@ const recentDiaries = diaryEntries.slice(0, 3);
                     {recentDiaries.map(entry => (
                         <li>
                             <a href={entry.url} class="text-orange-400 hover:underline">
-                                {entry.frontmatter.date} - {entry.frontmatter.title}
+                                {entry.frontmatter.date.slice(0, 10)} - {entry.frontmatter.title}
                             </a>
                         </li>
                     ))}
