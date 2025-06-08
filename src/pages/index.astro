@@ -3,6 +3,9 @@
 const name = "nowex35";
 const title = "Full-Stack Engineer";
 const description = "Backend-focused engineer with expertise in frontend, infrastructure, and business understanding";
+const diaryEntries = await Astro.glob('./diary/*.md');
+diaryEntries.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
+const recentDiaries = diaryEntries.slice(0, 3);
 ---
 
 <html lang="ja">
@@ -32,6 +35,7 @@ const description = "Backend-focused engineer with expertise in frontend, infras
                         <a href="#projects" class="text-gray-300 hover:text-orange-400 transition-colors">Projects</a>
                         <a href="#contact" class="text-gray-300 hover:text-orange-400 transition-colors">Contact</a>
                         <a href="/game" class="text-gray-300 hover:text-orange-400 transition-colors">Game</a>
+                        <a href="/diary" class="text-gray-300 hover:text-orange-400 transition-colors">Diary</a>
                     </div>
                 </div>
             </div>
@@ -56,6 +60,24 @@ const description = "Backend-focused engineer with expertise in frontend, infras
                     <span class="px-4 py-2 bg-yellow-500/20 text-yellow-300 rounded-full text-sm border border-yellow-500/30">Infrastructure</span>
                     <span class="px-4 py-2 bg-orange-600/20 text-orange-300 rounded-full text-sm border border-orange-600/30">Business</span>
                 </div>
+            </div>
+        </section>
+
+        <!-- Latest Diary Section -->
+        <section class="py-10 px-6 bg-slate-800/40">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-3xl font-bold text-white mb-6">
+                    <a href="/diary" class="border-b-2 border-orange-500 pb-1 hover:text-orange-400">最近の日記</a>
+                </h2>
+                <ul class="space-y-2">
+                    {recentDiaries.map(entry => (
+                        <li>
+                            <a href={entry.url} class="text-orange-400 hover:underline">
+                                {entry.frontmatter.date} - {entry.frontmatter.title}
+                            </a>
+                        </li>
+                    ))}
+                </ul>
             </div>
         </section>
 
