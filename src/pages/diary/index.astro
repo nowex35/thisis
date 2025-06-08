@@ -1,0 +1,19 @@
+---
+import DiaryLayout from '../../layouts/DiaryLayout.astro';
+export const prerender = true;
+const entries = await Astro.glob('./*.md');
+entries.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
+---
+
+<DiaryLayout title="Diary">
+  <h1 class="text-4xl mb-6">日記</h1>
+  <ul class="space-y-4">
+    {entries.map(entry => (
+      <li>
+        <a href={entry.url} class="text-orange-400 hover:underline">
+          {entry.frontmatter.date} - {entry.frontmatter.title}
+        </a>
+      </li>
+    ))}
+  </ul>
+</DiaryLayout>
