@@ -1,0 +1,35 @@
+---
+const pageTitle = "Diary";
+export const prerender = true;
+const entries = await Astro.glob('./*.md');
+const entriesWithParsedDates = entries.map(entry => ({
+    ...entry,
+    parsedDate: new Date(entry.frontmatter.date),
+}));
+entriesWithParsedDates.sort((a, b) => b.parsedDate - a.parsedDate);
+const sortedEntries = entriesWithParsedDates.map(({ parsedDate, ...entry }) => entry);
+---
+
+<html lang="ja">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <link rel="stylesheet" href="/src/styles/global.css">
+</head>
+<body class="min-h-screen bg-slate-900 text-white p-8">
+    <header class="mb-8">
+        <a href="/" class="text-orange-400 hover:text-orange-300">&larr; Home</a>
+    </header>
+    <h1 class="text-4xl mb-6">日記</h1>
+    <ul class="space-y-4">
+        {entries.map(entry => (
+            <li>
+                <a href={entry.url} class="text-orange-400 hover:underline">
+                    {entry.frontmatter.date} - {entry.frontmatter.title}
+                </a>
+            </li>
+        ))}
+    </ul>
+</body>
+</html>
