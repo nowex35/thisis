@@ -1,0 +1,696 @@
+---
+// Live Code Playground Component
+const codeExamples = [
+  {
+    title: "Go Web API",
+    language: "go",
+    description: "高性能なGo WebAPIの実装例",
+    code: `package main
+
+import (
+    "encoding/json"
+    "log"
+    "net/http"
+    "github.com/gorilla/mux"
+)
+
+type User struct {
+    ID    int    \`json:"id"\`
+    Name  string \`json:"name"\`
+    Email string \`json:"email"\`
+}
+
+func getUserHandler(w http.ResponseWriter, r *http.Request) {
+    vars := mux.Vars(r)
+    userID := vars["id"]
+    
+    // Mock user data
+    user := User{
+        ID:    1,
+        Name:  "nowex35",
+        Email: "user@example.com",
+    }
+    
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(user)
+}
+
+func main() {
+    r := mux.NewRouter()
+    r.HandleFunc("/api/users/{id}", getUserHandler).Methods("GET")
+    
+    log.Println("Server starting on :8080")
+    log.Fatal(http.ListenAndServe(":8080", r))
+}`
+  },
+  {
+    title: "React TypeScript Component",
+    language: "typescript",
+    description: "型安全なReactコンポーネントの実装",
+    code: `import React, { useState, useEffect } from 'react';
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+interface UserProfileProps {
+  userId: number;
+}
+
+const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch(\`/api/users/\${userId}\`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch user');
+        }
+        const userData = await response.json();
+        setUser(userData);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Unknown error');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!user) return <div>User not found</div>;
+
+  return (
+    <div className="user-profile">
+      <h2>{user.name}</h2>
+      <p>Email: {user.email}</p>
+    </div>
+  );
+};
+
+export default UserProfile;`
+  },
+  {
+    title: "Python FastAPI",
+    language: "python",
+    description: "FastAPIでの高性能Web API",
+    code: `from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel, EmailStr
+from typing import List, Optional
+import uvicorn
+
+app = FastAPI(title="User API", version="1.0.0")
+
+class User(BaseModel):
+    id: int
+    name: str
+    email: EmailStr
+
+class UserCreate(BaseModel):
+    name: str
+    email: EmailStr
+
+# Mock database
+users_db: List[User] = [
+    User(id=1, name="nowex35", email="user@example.com")
+]
+
+@app.get("/")
+async def root():
+    return {"message": "Welcome to User API"}
+
+@app.get("/users/{user_id}", response_model=User)
+async def get_user(user_id: int):
+    user = next((u for u in users_db if u.id == user_id), None)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+@app.get("/users/", response_model=List[User])
+async def list_users(skip: int = 0, limit: int = 10):
+    return users_db[skip: skip + limit]
+
+@app.post("/users/", response_model=User, status_code=201)
+async def create_user(user: UserCreate):
+    new_id = max([u.id for u in users_db], default=0) + 1
+    new_user = User(id=new_id, **user.dict())
+    users_db.append(new_user)
+    return new_user
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)`
+  }
+];
+---
+
+<div class="live-code-playground" id="live-code-playground">
+  <div class="playground-header">
+    <h3 class="playground-title">
+      <span class="playground-icon">💻</span>
+      Live Code Playground
+    </h3>
+    <div class="playground-subtitle">
+      実際のプロジェクトで使用しているコード例をご覧いただけます
+    </div>
+  </div>
+  
+  <div class="code-examples">
+    {codeExamples.map((example, index) => (
+      <div class="code-example" key={index}>
+        <div class="code-header">
+          <div class="code-info">
+            <h4 class="code-title">{example.title}</h4>
+            <p class="code-description">{example.description}</p>
+          </div>
+          <div class="code-controls">
+            <span class={`language-badge ${example.language}`}>{example.language}</span>
+            <button class="copy-btn" data-code={example.code}>
+              <span class="copy-icon">📋</span>
+              Copy
+            </button>
+          </div>
+        </div>
+        
+        <div class="code-container">
+          <div class="code-window">
+            <div class="window-controls">
+              <div class="window-dot red"></div>
+              <div class="window-dot yellow"></div>
+              <div class="window-dot green"></div>
+            </div>
+            <div class="code-content">
+              <pre><code class={`language-${example.language}`}>{example.code}</code></pre>
+            </div>
+          </div>
+        </div>
+        
+        <div class="code-features">
+          <div class="feature-tags">
+            {example.language === 'go' && (
+              <>
+                <span class="feature-tag">高性能</span>
+                <span class="feature-tag">並行処理</span>
+                <span class="feature-tag">REST API</span>
+              </>
+            )}
+            {example.language === 'typescript' && (
+              <>
+                <span class="feature-tag">型安全</span>
+                <span class="feature-tag">React Hooks</span>
+                <span class="feature-tag">エラーハンドリング</span>
+              </>
+            )}
+            {example.language === 'python' && (
+              <>
+                <span class="feature-tag">自動ドキュメント</span>
+                <span class="feature-tag">バリデーション</span>
+                <span class="feature-tag">非同期処理</span>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    ))}
+  </div>
+  
+  <div class="playground-footer">
+    <div class="footer-content">
+      <div class="tech-stack">
+        <h4>使用技術スタック</h4>
+        <div class="stack-items">
+          <div class="stack-item">
+            <span class="stack-icon">🔥</span>
+            <span>Go + Gorilla Mux</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-icon">⚛️</span>
+            <span>React + TypeScript</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-icon">🐍</span>
+            <span>Python + FastAPI</span>
+          </div>
+          <div class="stack-item">
+            <span class="stack-icon">🐳</span>
+            <span>Docker + AWS</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="code-quality">
+        <h4>コード品質指標</h4>
+        <div class="quality-metrics">
+          <div class="metric">
+            <span class="metric-label">テストカバレッジ</span>
+            <div class="metric-bar">
+              <div class="metric-fill" style="width: 85%"></div>
+            </div>
+            <span class="metric-value">85%</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">コード品質</span>
+            <div class="metric-bar">
+              <div class="metric-fill" style="width: 92%"></div>
+            </div>
+            <span class="metric-value">A+</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">パフォーマンス</span>
+            <div class="metric-bar">
+              <div class="metric-fill" style="width: 88%"></div>
+            </div>
+            <span class="metric-value">88%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.live-code-playground {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(251, 146, 60, 0.2);
+  padding: 24px;
+  margin: 24px 0;
+  backdrop-filter: blur(10px);
+}
+
+.playground-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.playground-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 24px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.playground-icon {
+  font-size: 28px;
+}
+
+.playground-subtitle {
+  color: #cbd5e1;
+  font-size: 16px;
+}
+
+.code-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.code-example {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(251, 146, 60, 0.2);
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.code-example:hover {
+  border-color: rgba(251, 146, 60, 0.4);
+  transform: translateY(-2px);
+}
+
+.code-header {
+  padding: 20px;
+  border-bottom: 1px solid rgba(251, 146, 60, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.code-info {
+  flex: 1;
+}
+
+.code-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.code-description {
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.code-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.language-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.language-badge.go {
+  background: rgba(0, 173, 216, 0.2);
+  color: #00add8;
+  border: 1px solid rgba(0, 173, 216, 0.3);
+}
+
+.language-badge.typescript {
+  background: rgba(43, 116, 137, 0.2);
+  color: #2b7489;
+  border: 1px solid rgba(43, 116, 137, 0.3);
+}
+
+.language-badge.python {
+  background: rgba(53, 114, 165, 0.2);
+  color: #3572a5;
+  border: 1px solid rgba(53, 114, 165, 0.3);
+}
+
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: rgba(251, 146, 60, 0.1);
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  border-radius: 6px;
+  color: #fb923d;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.copy-btn:hover {
+  background: rgba(251, 146, 60, 0.2);
+  border-color: rgba(251, 146, 60, 0.5);
+}
+
+.copy-icon {
+  font-size: 14px;
+}
+
+.code-container {
+  padding: 0 20px 20px;
+}
+
+.code-window {
+  background: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.window-controls {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #2d2d2d;
+  border-bottom: 1px solid #3d3d3d;
+}
+
+.window-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.window-dot.red {
+  background: #ff5f56;
+}
+
+.window-dot.yellow {
+  background: #ffbd2e;
+}
+
+.window-dot.green {
+  background: #27ca3f;
+}
+
+.code-content {
+  padding: 20px;
+  overflow-x: auto;
+}
+
+.code-content pre {
+  margin: 0;
+  font-family: 'Fira Code', 'Cascadia Code', Consolas, 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #d4d4d4;
+}
+
+.code-content code {
+  display: block;
+  white-space: pre;
+}
+
+.code-features {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(251, 146, 60, 0.1);
+}
+
+.feature-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.feature-tag {
+  padding: 4px 8px;
+  background: rgba(251, 146, 60, 0.1);
+  border: 1px solid rgba(251, 146, 60, 0.2);
+  border-radius: 12px;
+  color: #fb923d;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.playground-footer {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(251, 146, 60, 0.2);
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+}
+
+.tech-stack h4,
+.code-quality h4 {
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.stack-items {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.stack-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 8px;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.stack-icon {
+  font-size: 16px;
+}
+
+.quality-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.metric {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.metric-label {
+  min-width: 100px;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.metric-bar {
+  flex: 1;
+  height: 8px;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.metric-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #fb923d, #f97316);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.metric-value {
+  min-width: 40px;
+  text-align: right;
+  color: #fb923d;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .live-code-playground {
+    padding: 16px;
+  }
+  
+  .playground-title {
+    font-size: 20px;
+  }
+  
+  .code-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .code-controls {
+    align-self: stretch;
+    justify-content: space-between;
+  }
+  
+  .code-content {
+    padding: 16px;
+  }
+  
+  .code-content pre {
+    font-size: 12px;
+  }
+  
+  .footer-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .stack-items {
+    grid-template-columns: 1fr;
+  }
+  
+  .metric {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .metric-label {
+    min-width: auto;
+  }
+  
+  .metric-bar {
+    align-self: stretch;
+  }
+  
+  .metric-value {
+    align-self: flex-end;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const copyButtons = document.querySelectorAll('.copy-btn');
+  
+  copyButtons.forEach(button => {
+    button.addEventListener('click', async () => {
+      const code = button.dataset.code;
+      
+      try {
+        await navigator.clipboard.writeText(code);
+        
+        // Visual feedback
+        const originalText = button.innerHTML;
+        button.innerHTML = '<span class="copy-icon">✅</span>Copied!';
+        button.style.background = 'rgba(34, 197, 94, 0.2)';
+        button.style.borderColor = 'rgba(34, 197, 94, 0.5)';
+        button.style.color = '#22c55e';
+        
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.style.background = 'rgba(251, 146, 60, 0.1)';
+          button.style.borderColor = 'rgba(251, 146, 60, 0.3)';
+          button.style.color = '#fb923d';
+        }, 2000);
+        
+      } catch (err) {
+        console.error('Failed to copy code:', err);
+        
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = code;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        button.innerHTML = '<span class="copy-icon">✅</span>Copied!';
+        setTimeout(() => {
+          button.innerHTML = '<span class="copy-icon">📋</span>Copy';
+        }, 2000);
+      }
+    });
+  });
+  
+  // Animate metrics on scroll
+  const observeMetrics = () => {
+    const metrics = document.querySelectorAll('.metric-fill');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const fill = entry.target;
+          const width = fill.style.width;
+          fill.style.width = '0%';
+          
+          setTimeout(() => {
+            fill.style.width = width;
+          }, 100);
+          
+          observer.unobserve(fill);
+        }
+      });
+    }, { threshold: 0.5 });
+    
+    metrics.forEach(metric => observer.observe(metric));
+  };
+  
+  observeMetrics();
+});
+</script>

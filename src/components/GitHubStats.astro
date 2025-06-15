@@ -1,0 +1,519 @@
+---
+// GitHub API Integration Component
+const githubUsername = "nowex35";
+---
+
+<div class="github-stats-container" id="github-stats">
+  <div class="stats-header">
+    <h3 class="stats-title">
+      <span class="github-icon">📊</span>
+      GitHub Activity
+    </h3>
+    <div class="stats-loading" id="stats-loading">
+      <div class="loading-spinner"></div>
+      <span>Loading...</span>
+    </div>
+  </div>
+  
+  <div class="stats-content" id="stats-content" style="display: none;">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🔥</div>
+        <div class="stat-data">
+          <span class="stat-value" id="commit-count">-</span>
+          <span class="stat-label">Commits (30d)</span>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">📁</div>
+        <div class="stat-data">
+          <span class="stat-value" id="repo-count">-</span>
+          <span class="stat-label">Repositories</span>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-data">
+          <span class="stat-value" id="star-count">-</span>
+          <span class="stat-label">Stars</span>
+        </div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">🌍</div>
+        <div class="stat-data">
+          <span class="stat-value" id="language-primary">-</span>
+          <span class="stat-label">Primary Language</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="language-chart" id="language-chart">
+      <h4 class="chart-title">Language Distribution</h4>
+      <div class="chart-container">
+        <div class="chart-bars" id="chart-bars"></div>
+        <div class="chart-legend" id="chart-legend"></div>
+      </div>
+    </div>
+    
+    <div class="recent-activity" id="recent-activity">
+      <h4 class="activity-title">Recent Activity</h4>
+      <div class="activity-timeline" id="activity-timeline"></div>
+    </div>
+  </div>
+  
+  <div class="stats-error" id="stats-error" style="display: none;">
+    <div class="error-icon">⚠️</div>
+    <div class="error-message">
+      <p>GitHub APIの取得に失敗しました</p>
+      <p class="error-detail">しばらく待ってから再度お試しください</p>
+    </div>
+  </div>
+</div>
+
+<style>
+.github-stats-container {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
+  border-radius: 16px;
+  border: 1px solid rgba(251, 146, 60, 0.2);
+  padding: 24px;
+  margin: 24px 0;
+  backdrop-filter: blur(10px);
+}
+
+.stats-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.stats-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.github-icon {
+  font-size: 24px;
+}
+
+.stats-loading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #cbd5e1;
+  font-size: 14px;
+}
+
+.loading-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(251, 146, 60, 0.2);
+  border-top: 2px solid #fb923d;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.stat-card {
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(251, 146, 60, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  border-color: rgba(251, 146, 60, 0.4);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  display: block;
+  font-size: 24px;
+  font-weight: 700;
+  color: #fb923d;
+  margin-bottom: 4px;
+}
+
+.stat-label {
+  font-size: 12px;
+  color: #cbd5e1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.language-chart {
+  margin-bottom: 24px;
+}
+
+.chart-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.chart-container {
+  display: flex;
+  gap: 16px;
+}
+
+.chart-bars {
+  flex: 1;
+  height: 120px;
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: end;
+  gap: 4px;
+  overflow: hidden;
+}
+
+.chart-bar {
+  background: linear-gradient(to top, #fb923d, #f97316);
+  border-radius: 4px 4px 0 0;
+  min-width: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.chart-bar:hover {
+  transform: scaleY(1.1);
+}
+
+.chart-legend {
+  min-width: 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #cbd5e1;
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+}
+
+.activity-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 16px;
+}
+
+.activity-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 8px;
+  border-left: 3px solid #fb923d;
+}
+
+.activity-icon {
+  font-size: 16px;
+  width: 24px;
+  text-align: center;
+}
+
+.activity-content {
+  flex: 1;
+}
+
+.activity-message {
+  color: white;
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.activity-time {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.stats-error {
+  text-align: center;
+  padding: 40px;
+}
+
+.error-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.error-message p {
+  color: #cbd5e1;
+  margin-bottom: 8px;
+}
+
+.error-detail {
+  color: #64748b;
+  font-size: 14px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .github-stats-container {
+    padding: 16px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .chart-container {
+    flex-direction: column;
+  }
+  
+  .chart-legend {
+    min-width: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', async function() {
+  const githubUsername = 'nowex35';
+  const loadingEl = document.getElementById('stats-loading');
+  const contentEl = document.getElementById('stats-content');
+  const errorEl = document.getElementById('stats-error');
+  
+  const languageColors = {
+    'JavaScript': '#f1e05a',
+    'TypeScript': '#2b7489',
+    'Python': '#3572A5',
+    'Go': '#00ADD8',
+    'Java': '#b07219',
+    'C++': '#f34b7d',
+    'C': '#555555',
+    'HTML': '#e34c26',
+    'CSS': '#563d7c',
+    'Shell': '#89e051',
+    'Dockerfile': '#384d54',
+    'Mojo': '#ff6b35'
+  };
+  
+  async function fetchGitHubData() {
+    try {
+      // User info
+      const userResponse = await fetch(`https://api.github.com/users/${githubUsername}`);
+      const userData = await userResponse.json();
+      
+      // Repositories
+      const reposResponse = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=100`);
+      const reposData = await reposResponse.json();
+      
+      // Recent events
+      const eventsResponse = await fetch(`https://api.github.com/users/${githubUsername}/events/public?per_page=10`);
+      const eventsData = await eventsResponse.json();
+      
+      return {
+        user: userData,
+        repos: reposData,
+        events: eventsData
+      };
+    } catch (error) {
+      throw new Error('Failed to fetch GitHub data');
+    }
+  }
+  
+  function calculateStats(data) {
+    const { user, repos, events } = data;
+    
+    // Calculate commit count from recent events
+    const commitEvents = events.filter(event => event.type === 'PushEvent');
+    const commitCount = commitEvents.reduce((total, event) => {
+      return total + (event.payload.commits ? event.payload.commits.length : 0);
+    }, 0);
+    
+    // Calculate language distribution
+    const languages = {};
+    repos.forEach(repo => {
+      if (repo.language) {
+        languages[repo.language] = (languages[repo.language] || 0) + 1;
+      }
+    });
+    
+    // Sort languages by usage
+    const sortedLanguages = Object.entries(languages)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5);
+    
+    // Calculate total stars
+    const totalStars = repos.reduce((total, repo) => total + repo.stargazers_count, 0);
+    
+    return {
+      commitCount,
+      repoCount: repos.length,
+      starCount: totalStars,
+      primaryLanguage: sortedLanguages[0] ? sortedLanguages[0][0] : 'N/A',
+      languages: sortedLanguages,
+      recentActivity: events.slice(0, 5)
+    };
+  }
+  
+  function renderStats(stats) {
+    // Update stat cards
+    document.getElementById('commit-count').textContent = stats.commitCount;
+    document.getElementById('repo-count').textContent = stats.repoCount;
+    document.getElementById('star-count').textContent = stats.starCount;
+    document.getElementById('language-primary').textContent = stats.primaryLanguage;
+    
+    // Render language chart
+    const chartBars = document.getElementById('chart-bars');
+    const chartLegend = document.getElementById('chart-legend');
+    
+    chartBars.innerHTML = '';
+    chartLegend.innerHTML = '';
+    
+    const maxCount = Math.max(...stats.languages.map(([, count]) => count));
+    
+    stats.languages.forEach(([language, count]) => {
+      const percentage = (count / maxCount) * 100;
+      const color = languageColors[language] || '#fb923d';
+      
+      // Create bar
+      const bar = document.createElement('div');
+      bar.className = 'chart-bar';
+      bar.style.height = `${percentage}%`;
+      bar.style.background = `linear-gradient(to top, ${color}, ${color}dd)`;
+      bar.title = `${language}: ${count} repos`;
+      chartBars.appendChild(bar);
+      
+      // Create legend item
+      const legendItem = document.createElement('div');
+      legendItem.className = 'legend-item';
+      legendItem.innerHTML = `
+        <div class="legend-color" style="background-color: ${color}"></div>
+        <span>${language} (${count})</span>
+      `;
+      chartLegend.appendChild(legendItem);
+    });
+    
+    // Render recent activity
+    const activityTimeline = document.getElementById('activity-timeline');
+    activityTimeline.innerHTML = '';
+    
+    stats.recentActivity.forEach(event => {
+      const activityItem = document.createElement('div');
+      activityItem.className = 'activity-item';
+      
+      let icon = '📝';
+      let message = 'Unknown activity';
+      
+      switch (event.type) {
+        case 'PushEvent':
+          icon = '🔥';
+          const commitCount = event.payload.commits ? event.payload.commits.length : 0;
+          message = `Pushed ${commitCount} commit${commitCount !== 1 ? 's' : ''} to ${event.repo.name}`;
+          break;
+        case 'CreateEvent':
+          icon = '✨';
+          message = `Created ${event.payload.ref_type} in ${event.repo.name}`;
+          break;
+        case 'IssuesEvent':
+          icon = '🐛';
+          message = `${event.payload.action} issue in ${event.repo.name}`;
+          break;
+        case 'PullRequestEvent':
+          icon = '🔀';
+          message = `${event.payload.action} pull request in ${event.repo.name}`;
+          break;
+        case 'WatchEvent':
+          icon = '⭐';
+          message = `Starred ${event.repo.name}`;
+          break;
+      }
+      
+      const timeAgo = getTimeAgo(new Date(event.created_at));
+      
+      activityItem.innerHTML = `
+        <div class="activity-icon">${icon}</div>
+        <div class="activity-content">
+          <div class="activity-message">${message}</div>
+          <div class="activity-time">${timeAgo}</div>
+        </div>
+      `;
+      
+      activityTimeline.appendChild(activityItem);
+    });
+  }
+  
+  function getTimeAgo(date) {
+    const now = new Date();
+    const diffInSeconds = Math.floor((now - date) / 1000);
+    
+    if (diffInSeconds < 60) return 'Just now';
+    if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+    if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+    return `${Math.floor(diffInSeconds / 86400)}d ago`;
+  }
+  
+  function showError() {
+    loadingEl.style.display = 'none';
+    contentEl.style.display = 'none';
+    errorEl.style.display = 'block';
+  }
+  
+  function showContent() {
+    loadingEl.style.display = 'none';
+    errorEl.style.display = 'none';
+    contentEl.style.display = 'block';
+  }
+  
+  // Initialize
+  try {
+    const data = await fetchGitHubData();
+    const stats = calculateStats(data);
+    renderStats(stats);
+    showContent();
+  } catch (error) {
+    console.error('Error fetching GitHub data:', error);
+    showError();
+  }
+});
+</script>

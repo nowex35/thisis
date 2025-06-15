@@ -1,5 +1,11 @@
 ---
 // Astro component script (runs on the server)
+import SkillNavigator from '../components/SkillNavigator.astro';
+import GitHubStats from '../components/GitHubStats.astro';
+import RecruiterView from '../components/RecruiterView.astro';
+import LiveCodePlayground from '../components/LiveCodePlayground.astro';
+import GrowthVisualization from '../components/GrowthVisualization.astro';
+
 const name = "nowex35";
 const title = "Full-Stack Engineer";
 const description = "Backend-focused engineer with expertise in frontend, infrastructure, and business understanding";
@@ -13,13 +19,63 @@ const recentDiaries = diaryEntries.slice(0, 3);
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- SEO Meta Tags -->
     <title>{name} - {title}</title>
     <meta name="description" content={description} />
+    <meta name="author" content={name} />
+    <meta name="keywords" content="Full-Stack Engineer, Backend Developer, Go, TypeScript, Python, React, AWS, Mojo, Web Development" />
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content={`${name} - ${title}`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={name} />
+    
+    <!-- Twitter Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${name} - ${title}`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:creator" content="@nowex35" />
+    
+    <!-- Performance & Preload -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://api.github.com">
+    <link rel="dns-prefetch" href="https://github.com">
+    
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "{name}",
+      "jobTitle": "{title}",
+      "description": "{description}",
+      "url": "https://nowex35.dev",
+      "sameAs": [
+        "https://github.com/nowex35",
+        "https://twitter.com/nowex35",
+        "https://zenn.com/nowex35"
+      ],
+      "knowsAbout": [
+        "Go Programming",
+        "TypeScript",
+        "Python",
+        "React",
+        "AWS",
+        "Backend Development",
+        "Full-Stack Development"
+      ]
+    }
+    </script>
+    
     <link rel="stylesheet" href="/src/styles/global.css">
 </head>
 <body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main" class="skip-link">Skip to main content</a>
+    
     <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <!-- Navigation -->
         <nav class="fixed top-0 w-full bg-slate-900/80 backdrop-blur-md z-50 border-b border-orange-500/20">
@@ -62,7 +118,8 @@ const recentDiaries = diaryEntries.slice(0, 3);
         </nav>
 
         <!-- Hero Section -->
-        <section class="pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6">
+        <main id="main">
+        <section class="hero-section pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6" aria-label="Hero section">
             <div class="max-w-6xl mx-auto text-center">
                 <div class="relative">
                     <h1 class="text-4xl sm:text-6xl md:text-8xl font-bold text-white mb-6">
@@ -98,6 +155,12 @@ const recentDiaries = diaryEntries.slice(0, 3);
                         </li>
                     ))}
                 </ul>
+                
+                <!-- GitHub Stats Integration -->
+                <GitHubStats />
+                
+                <!-- Growth Visualization Integration -->
+                <GrowthVisualization />
             </div>
         </section>
 
@@ -122,32 +185,8 @@ const recentDiaries = diaryEntries.slice(0, 3);
                     </div>
                     <div class="bg-gradient-to-br from-orange-500/10 to-red-500/10 p-8 rounded-2xl border border-orange-500/20">
                         <h3 class="text-xl font-semibold text-white mb-4">Core Skills</h3>
-                        <div class="space-y-3">
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-300">Backend Development</span>
-                                <div class="flex space-x-1">
-                                    <span class="text-orange-400">🔥🔥🔥🔥🔥</span>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-300">Frontend Development</span>
-                                <div class="flex space-x-1">
-                                    <span class="text-orange-400">🔥🔥🔥</span>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-300">Infrastructure</span>
-                                <div class="flex space-x-1">
-                                    <span class="text-orange-400">🔥🔥🔥</span>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-center">
-                                <span class="text-gray-300">Business Understanding</span>
-                                <div class="flex space-x-1">
-                                    <span class="text-orange-400">🔥🔥🔥🔥</span>
-                                </div>
-                            </div>
-                        </div>
+                                <!-- 3D Skill Navigator Integration -->
+                        <SkillNavigator />
                     </div>
                 </div>
             </div>
@@ -159,6 +198,9 @@ const recentDiaries = diaryEntries.slice(0, 3);
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-8 sm:mb-12 text-center">
                     <span class="border-b-4 border-orange-500 pb-2">Experience & Education</span>
                 </h2>
+                
+                <!-- Recruiter Experience Engine -->
+                <RecruiterView />
                 
                 <!-- Experience -->
                 <div class="mb-16">
@@ -355,6 +397,13 @@ const recentDiaries = diaryEntries.slice(0, 3);
             </div>
         </section>
 
+        <!-- Live Code Playground Section -->
+        <section class="py-16 sm:py-20 px-4 sm:px-6">
+            <div class="max-w-6xl mx-auto">
+                <LiveCodePlayground />
+            </div>
+        </section>
+
         <!-- Footer -->
         <footer class="py-6 sm:py-8 px-4 sm:px-6 border-t border-orange-500/20">
             <div class="max-w-6xl mx-auto text-center">
@@ -363,6 +412,7 @@ const recentDiaries = diaryEntries.slice(0, 3);
                 </p>
             </div>
         </footer>
+        </main>
     </div>
 
     <script>

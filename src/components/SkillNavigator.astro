@@ -1,0 +1,535 @@
+---
+// 3D Interactive Skill Navigator Component
+const skills = [
+  { name: "Backend Development", level: 5, category: "development", x: 0, y: 0, z: 0 },
+  { name: "Go", level: 4, category: "language", x: 2, y: 1, z: -1 },
+  { name: "TypeScript", level: 4, category: "language", x: -2, y: 1, z: -1 },
+  { name: "Python", level: 4, category: "language", x: 1, y: -1, z: 2 },
+  { name: "Frontend Development", level: 3, category: "development", x: -1, y: 2, z: 1 },
+  { name: "React", level: 3, category: "framework", x: -3, y: 0, z: 1 },
+  { name: "Next.js", level: 3, category: "framework", x: -1, y: -2, z: -2 },
+  { name: "Infrastructure", level: 3, category: "development", x: 2, y: -1, z: 1 },
+  { name: "Docker", level: 3, category: "tool", x: 3, y: 1, z: 0 },
+  { name: "AWS", level: 3, category: "cloud", x: 1, y: 2, z: -2 },
+  { name: "Business Understanding", level: 4, category: "soft", x: -2, y: -1, z: 2 },
+  { name: "FastAPI", level: 4, category: "framework", x: 0, y: -2, z: 1 },
+  { name: "PostgreSQL", level: 3, category: "database", x: 2, y: 0, z: 2 },
+  { name: "Redis", level: 3, category: "database", x: -3, y: -1, z: 0 },
+  { name: "Mojo", level: 2, category: "language", x: 0, y: 3, z: -1 }
+];
+
+const categories = {
+  development: { color: "from-orange-400 to-red-500", bgColor: "bg-orange-500/20", borderColor: "border-orange-500/30" },
+  language: { color: "from-blue-400 to-blue-600", bgColor: "bg-blue-500/20", borderColor: "border-blue-500/30" },
+  framework: { color: "from-green-400 to-green-600", bgColor: "bg-green-500/20", borderColor: "border-green-500/30" },
+  tool: { color: "from-purple-400 to-purple-600", bgColor: "bg-purple-500/20", borderColor: "border-purple-500/30" },
+  cloud: { color: "from-yellow-400 to-yellow-600", bgColor: "bg-yellow-500/20", borderColor: "border-yellow-500/30" },
+  database: { color: "from-pink-400 to-pink-600", bgColor: "bg-pink-500/20", borderColor: "border-pink-500/30" },
+  soft: { color: "from-indigo-400 to-indigo-600", bgColor: "bg-indigo-500/20", borderColor: "border-indigo-500/30" }
+};
+---
+
+<div class="skill-navigator-container" id="skill-navigator">
+  <div class="skill-canvas" id="skill-canvas">
+    <div class="skill-space" id="skill-space">
+      {skills.map((skill, index) => {
+        const category = categories[skill.category];
+        const size = Math.max(0.8, skill.level * 0.2);
+        const intensity = skill.level * 20;
+        
+        return (
+          <div 
+            class={`skill-node ${category.bgColor} ${category.borderColor}`}
+            data-skill={skill.name}
+            data-level={skill.level}
+            data-category={skill.category}
+            style={`
+              --x: ${skill.x};
+              --y: ${skill.y};
+              --z: ${skill.z};
+              --size: ${size};
+              --intensity: ${intensity}%;
+            `}
+          >
+            <div class={`skill-core bg-gradient-to-br ${category.color}`}>
+              <span class="skill-flame">🔥</span>
+            </div>
+            <div class="skill-label">
+              <span class="skill-name">{skill.name}</span>
+              <div class="skill-level">
+                {Array.from({ length: 5 }, (_, i) => (
+                  <span class={i < skill.level ? "active" : ""}></span>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+  
+  <div class="skill-controls">
+    <button class="control-btn" data-action="rotate">🔄</button>
+    <button class="control-btn" data-action="zoom-in">🔍+</button>
+    <button class="control-btn" data-action="zoom-out">🔍-</button>
+    <button class="control-btn" data-action="reset">🎯</button>
+  </div>
+  
+  <div class="skill-legend">
+    {Object.entries(categories).map(([key, category]) => (
+      <div class={`legend-item ${category.bgColor} ${category.borderColor}`}>
+        <div class={`legend-color bg-gradient-to-r ${category.color}`}></div>
+        <span class="legend-text">{key.charAt(0).toUpperCase() + key.slice(1)}</span>
+      </div>
+    ))}
+  </div>
+  
+  <div class="skill-tooltip" id="skill-tooltip">
+    <div class="tooltip-content">
+      <h3 class="tooltip-title"></h3>
+      <div class="tooltip-level"></div>
+      <p class="tooltip-description"></p>
+    </div>
+  </div>
+</div>
+
+<style>
+.skill-navigator-container {
+  position: relative;
+  width: 100%;
+  height: 500px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
+  border-radius: 20px;
+  border: 2px solid rgba(251, 146, 60, 0.2);
+  overflow: hidden;
+  perspective: 1000px;
+}
+
+.skill-canvas {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.skill-space {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 400px;
+  transform: translate(-50%, -50%) rotateX(15deg) rotateY(0deg);
+  transform-style: preserve-3d;
+  transition: transform 0.5s ease;
+}
+
+.skill-node {
+  position: absolute;
+  width: calc(60px * var(--size));
+  height: calc(60px * var(--size));
+  transform: translate3d(
+    calc(var(--x) * 60px),
+    calc(var(--y) * 60px),
+    calc(var(--z) * 60px)
+  );
+  border-radius: 50%;
+  border: 2px solid;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.skill-node:hover {
+  transform: translate3d(
+    calc(var(--x) * 60px),
+    calc(var(--y) * 60px),
+    calc(var(--z) * 60px + 10px)
+  ) scale(1.2);
+  z-index: 10;
+}
+
+.skill-core {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 20px rgba(251, 146, 60, var(--intensity));
+}
+
+.skill-flame {
+  font-size: calc(20px * var(--size));
+  animation: flicker 2s ease-in-out infinite alternate;
+}
+
+.skill-label {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 10px;
+  text-align: center;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  background: rgba(15, 23, 42, 0.9);
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.skill-node:hover .skill-label {
+  opacity: 1;
+}
+
+.skill-name {
+  display: block;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.skill-level {
+  display: flex;
+  gap: 2px;
+  justify-content: center;
+}
+
+.skill-level span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(251, 146, 60, 0.3);
+  transition: background 0.3s ease;
+}
+
+.skill-level span.active {
+  background: #fb923d;
+  box-shadow: 0 0 6px #fb923d;
+}
+
+.skill-controls {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.control-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.control-btn:hover {
+  background: rgba(251, 146, 60, 0.2);
+  border-color: rgba(251, 146, 60, 0.5);
+  transform: scale(1.1);
+}
+
+.skill-legend {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 300px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border-radius: 12px;
+  border: 1px solid;
+  backdrop-filter: blur(10px);
+}
+
+.legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-text {
+  color: white;
+  font-size: 10px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.skill-tooltip {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  max-width: 300px;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  border-radius: 12px;
+  padding: 16px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(20px);
+}
+
+.tooltip-title {
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.tooltip-level {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.tooltip-level span {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(251, 146, 60, 0.3);
+}
+
+.tooltip-level span.active {
+  background: #fb923d;
+  box-shadow: 0 0 8px #fb923d;
+}
+
+.tooltip-description {
+  color: #cbd5e1;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+@keyframes flicker {
+  0% { transform: scale(1) rotate(0deg); opacity: 1; }
+  50% { transform: scale(1.1) rotate(2deg); opacity: 0.8; }
+  100% { transform: scale(1) rotate(-1deg); opacity: 1; }
+}
+
+@media (max-width: 768px) {
+  .skill-navigator-container {
+    height: 400px;
+  }
+  
+  .skill-space {
+    width: 300px;
+    height: 300px;
+  }
+  
+  .skill-controls {
+    top: 10px;
+    right: 10px;
+  }
+  
+  .control-btn {
+    width: 35px;
+    height: 35px;
+    font-size: 14px;
+  }
+  
+  .skill-legend {
+    bottom: 10px;
+    left: 10px;
+    max-width: 250px;
+  }
+  
+  .skill-tooltip {
+    top: 10px;
+    left: 10px;
+    max-width: 250px;
+  }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const skillSpace = document.getElementById('skill-space');
+  const skillNodes = document.querySelectorAll('.skill-node');
+  const tooltip = document.getElementById('skill-tooltip');
+  const controls = document.querySelectorAll('.control-btn');
+  
+  let rotation = { x: 15, y: 0 };
+  let isRotating = false;
+  let mousePosition = { x: 0, y: 0 };
+  
+  const skillDescriptions = {
+    "Backend Development": "サーバーサイドアプリケーションの設計・実装、API開発、データベース設計を得意とします。",
+    "Go": "高性能なWebアプリケーションやマイクロサービスの開発に使用。並行処理やクリーンアーキテクチャの実践。",
+    "TypeScript": "型安全なWebアプリケーション開発。React/Next.jsプロジェクトでの実用経験豊富。",
+    "Python": "FastAPIを使ったWebAPI開発、データ処理、機械学習関連のプロジェクトで活用。",
+    "Frontend Development": "React、Next.jsを中心とした現代的なフロントエンド開発。UX/UIにも配慮した実装。",
+    "React": "コンポーネント設計、状態管理、パフォーマンス最適化に精通。Hooks、Context API の活用。",
+    "Next.js": "SSR/SSG、API Routes、Image Optimizationなどの機能を活用したWebアプリケーション開発。",
+    "Infrastructure": "Docker、AWS、CI/CDパイプラインの構築・運用。インフラ as Code の実践。",
+    "Docker": "コンテナ化によるアプリケーションの可搬性向上、開発環境の標準化を実現。",
+    "AWS": "EC2、Lambda、RDS、S3等のサービスを活用したクラウドインフラの構築・運用。",
+    "Business Understanding": "要件定義から運用まで、ビジネス視点を持った技術的意思決定を行います。",
+    "FastAPI": "高性能なPython Web APIフレームワーク。自動ドキュメント生成、型安全性を活用。",
+    "PostgreSQL": "リレーショナルデータベースの設計・最適化。複雑なクエリやトランザクション処理に対応。",
+    "Redis": "キャッシュ、セッション管理、リアルタイム機能の実装でのNoSQLデータベース活用。",
+    "Mojo": "AI・機械学習向けの次世代プログラミング言語。Webフレームワーク開発にチャレンジ中。"
+  };
+  
+  // Auto rotation
+  function startAutoRotation() {
+    if (!isRotating) {
+      isRotating = true;
+      const autoRotate = () => {
+        if (isRotating) {
+          rotation.y += 0.5;
+          updateRotation();
+          requestAnimationFrame(autoRotate);
+        }
+      };
+      autoRotate();
+    }
+  }
+  
+  function stopAutoRotation() {
+    isRotating = false;
+  }
+  
+  function updateRotation() {
+    skillSpace.style.transform = `translate(-50%, -50%) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`;
+  }
+  
+  // Mouse interaction
+  let isDragging = false;
+  let lastMousePosition = { x: 0, y: 0 };
+  
+  skillSpace.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    stopAutoRotation();
+    lastMousePosition = { x: e.clientX, y: e.clientY };
+    skillSpace.style.cursor = 'grabbing';
+  });
+  
+  document.addEventListener('mousemove', (e) => {
+    mousePosition = { x: e.clientX, y: e.clientY };
+    
+    if (isDragging) {
+      const deltaX = e.clientX - lastMousePosition.x;
+      const deltaY = e.clientY - lastMousePosition.y;
+      
+      rotation.y += deltaX * 0.5;
+      rotation.x -= deltaY * 0.5;
+      rotation.x = Math.max(-60, Math.min(60, rotation.x));
+      
+      updateRotation();
+      lastMousePosition = { x: e.clientX, y: e.clientY };
+    }
+  });
+  
+  document.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      skillSpace.style.cursor = 'grab';
+      setTimeout(startAutoRotation, 2000);
+    }
+  });
+  
+  // Touch support
+  let lastTouchPosition = { x: 0, y: 0 };
+  
+  skillSpace.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    stopAutoRotation();
+    const touch = e.touches[0];
+    lastTouchPosition = { x: touch.clientX, y: touch.clientY };
+  });
+  
+  skillSpace.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const touch = e.touches[0];
+    const deltaX = touch.clientX - lastTouchPosition.x;
+    const deltaY = touch.clientY - lastTouchPosition.y;
+    
+    rotation.y += deltaX * 0.5;
+    rotation.x -= deltaY * 0.5;
+    rotation.x = Math.max(-60, Math.min(60, rotation.x));
+    
+    updateRotation();
+    lastTouchPosition = { x: touch.clientX, y: touch.clientY };
+  });
+  
+  skillSpace.addEventListener('touchend', () => {
+    setTimeout(startAutoRotation, 2000);
+  });
+  
+  // Skill node interactions
+  skillNodes.forEach(node => {
+    node.addEventListener('mouseenter', (e) => {
+      const skillName = node.dataset.skill;
+      const skillLevel = parseInt(node.dataset.level);
+      const description = skillDescriptions[skillName] || "このスキルについての詳細情報";
+      
+      tooltip.querySelector('.tooltip-title').textContent = skillName;
+      
+      const levelContainer = tooltip.querySelector('.tooltip-level');
+      levelContainer.innerHTML = '';
+      for (let i = 0; i < 5; i++) {
+        const levelSpan = document.createElement('span');
+        if (i < skillLevel) levelSpan.classList.add('active');
+        levelContainer.appendChild(levelSpan);
+      }
+      
+      tooltip.querySelector('.tooltip-description').textContent = description;
+      tooltip.style.opacity = '1';
+    });
+    
+    node.addEventListener('mouseleave', () => {
+      tooltip.style.opacity = '0';
+    });
+  });
+  
+  // Control buttons
+  controls.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const action = btn.dataset.action;
+      stopAutoRotation();
+      
+      switch(action) {
+        case 'rotate':
+          startAutoRotation();
+          break;
+        case 'zoom-in':
+          skillSpace.style.transform += ' scale(1.2)';
+          break;
+        case 'zoom-out':
+          skillSpace.style.transform += ' scale(0.8)';
+          break;
+        case 'reset':
+          rotation = { x: 15, y: 0 };
+          skillSpace.style.transform = 'translate(-50%, -50%) rotateX(15deg) rotateY(0deg)';
+          setTimeout(startAutoRotation, 1000);
+          break;
+      }
+    });
+  });
+  
+  // Initialize
+  skillSpace.style.cursor = 'grab';
+  setTimeout(startAutoRotation, 2000);
+});
+</script>

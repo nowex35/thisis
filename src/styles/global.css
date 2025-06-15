@@ -4,10 +4,142 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Color Variables for Consistency */
+  --primary-orange: #fb923d;
+  --primary-orange-light: rgba(251, 146, 60, 0.8);
+  --primary-orange-dark: #f97316;
+  --slate-900: #0f172a;
+  --slate-800: #1e293b;
+  --slate-700: #334155;
+  
+  /* Performance Optimizations */
+  --animation-duration: 0.3s;
+  --border-radius: 16px;
+  --blur-amount: 10px;
+}
+
 html {
   scroll-behavior: smooth;
+  /* Prevent horizontal scroll on mobile */
+  overflow-x: hidden;
 }
 
 body {
   font-family: "Inter", system-ui, sans-serif;
+  /* Better text rendering */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  /* Prevent horizontal scroll */
+  overflow-x: hidden;
+}
+
+/* Performance optimizations */
+* {
+  /* GPU acceleration for animations */
+  will-change: auto;
+}
+
+/* Better focus management for accessibility */
+*:focus {
+  outline: 2px solid var(--primary-orange);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Skip to main content for screen readers */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: var(--primary-orange);
+  color: white;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 4px;
+  z-index: 1000;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Improved mobile touch targets */
+@media (max-width: 768px) {
+  button, a, input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better mobile typography */
+  body {
+    font-size: 16px;
+    line-height: 1.6;
+  }
+  
+  /* Prevent zoom on form inputs */
+  input, select, textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  
+  html {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --primary-orange: #ff6000;
+  }
+}
+
+/* Dark mode preferences */
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+/* Loading performance optimization */
+img {
+  loading: lazy;
+  decoding: async;
+}
+
+/* Critical path CSS optimization */
+.hero-section {
+  contain: layout style paint;
+}
+
+/* Print styles */
+@media print {
+  body {
+    color: black !important;
+    background: white !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+  
+  a::after {
+    content: " (" attr(href) ")";
+    font-size: 0.8em;
+    color: #666;
+  }
+  
+  .print-break {
+    page-break-before: always;
+  }
 }
