@@ -1,21 +1,21 @@
 ---
 // 3D Interactive Skill Navigator Component
 const skills = [
-  { name: "Backend Development", level: 5, category: "development", x: 0, y: 0, z: 0 },
-  { name: "Go", level: 4, category: "language", x: 2, y: 1, z: -1 },
-  { name: "TypeScript", level: 4, category: "language", x: -2, y: 1, z: -1 },
-  { name: "Python", level: 4, category: "language", x: 1, y: -1, z: 2 },
-  { name: "Frontend Development", level: 3, category: "development", x: -1, y: 2, z: 1 },
-  { name: "React", level: 3, category: "framework", x: -3, y: 0, z: 1 },
-  { name: "Next.js", level: 3, category: "framework", x: -1, y: -2, z: -2 },
-  { name: "Infrastructure", level: 3, category: "development", x: 2, y: -1, z: 1 },
-  { name: "Docker", level: 3, category: "tool", x: 3, y: 1, z: 0 },
-  { name: "AWS", level: 3, category: "cloud", x: 1, y: 2, z: -2 },
-  { name: "Business Understanding", level: 4, category: "soft", x: -2, y: -1, z: 2 },
-  { name: "FastAPI", level: 4, category: "framework", x: 0, y: -2, z: 1 },
-  { name: "PostgreSQL", level: 3, category: "database", x: 2, y: 0, z: 2 },
-  { name: "Redis", level: 3, category: "database", x: -3, y: -1, z: 0 },
-  { name: "Mojo", level: 2, category: "language", x: 0, y: 3, z: -1 }
+  { name: "Backend Development", level: 5, category: "development" },
+  { name: "Go", level: 4, category: "language" },
+  { name: "TypeScript", level: 4, category: "language" },
+  { name: "Python", level: 4, category: "language" },
+  { name: "Frontend Development", level: 3, category: "development" },
+  { name: "React", level: 3, category: "framework" },
+  { name: "Next.js", level: 3, category: "framework" },
+  { name: "Infrastructure", level: 3, category: "development" },
+  { name: "Docker", level: 3, category: "tool" },
+  { name: "AWS", level: 3, category: "cloud" },
+  { name: "Business Understanding", level: 4, category: "soft" },
+  { name: "FastAPI", level: 4, category: "framework" },
+  { name: "PostgreSQL", level: 3, category: "database" },
+  { name: "Redis", level: 3, category: "database" },
+  { name: "Mojo", level: 2, category: "language" }
 ];
 
 const categories = {
@@ -44,9 +44,6 @@ const categories = {
             data-level={skill.level}
             data-category={skill.category}
             style={`
-              --x: ${skill.x};
-              --y: ${skill.y};
-              --z: ${skill.z};
               --size: ${size};
               --intensity: ${intensity}%;
             `}
@@ -68,12 +65,6 @@ const categories = {
     </div>
   </div>
   
-  <div class="skill-controls">
-    <button class="control-btn" data-action="rotate">🔄</button>
-    <button class="control-btn" data-action="zoom-in">🔍+</button>
-    <button class="control-btn" data-action="zoom-out">🔍-</button>
-    <button class="control-btn" data-action="reset">🎯</button>
-  </div>
   
   <div class="skill-legend">
     {Object.entries(categories).map(([key, category]) => (
@@ -91,60 +82,155 @@ const categories = {
       <p class="tooltip-description"></p>
     </div>
   </div>
+  </div>
+  
+  <!-- Expand Button -->
+  <div class="expand-section">
+    <button class="expand-btn" id="expand-btn">
+      <span class="expand-icon">📋</span>
+      <span class="expand-text">詳細表を表示</span>
+      <span class="expand-arrow">▼</span>
+    </button>
+  </div>
+  
+  <!-- Table View -->
+  <div class="skill-table" id="skill-table">
+    <div class="table-container">
+      <table class="skills-table">
+        <thead>
+          <tr>
+            <th>スキル</th>
+            <th>カテゴリ</th>
+            <th>レベル</th>
+            <th>詳細</th>
+          </tr>
+        </thead>
+        <tbody>
+          {skills.map((skill) => {
+            const category = categories[skill.category];
+            return (
+              <tr class="skill-row">
+                <td class="skill-name-cell">
+                  <div class="skill-name-wrapper">
+                    <div class={`skill-dot ${category.bgColor}`}></div>
+                    <span class="skill-name">{skill.name}</span>
+                  </div>
+                </td>
+                <td class="category-cell">
+                  <span class={`category-badge ${category.bgColor} ${category.borderColor}`}>
+                    {skill.category.charAt(0).toUpperCase() + skill.category.slice(1)}
+                  </span>
+                </td>
+                <td class="level-cell">
+                  <div class="level-display">
+                    <div class="level-stars">
+                      {Array.from({ length: 5 }, (_, i) => (
+                        <span class={`star ${i < skill.level ? "active" : ""}`}>★</span>
+                      ))}
+                    </div>
+                    <span class="level-text">{skill.level}/5</span>
+                  </div>
+                </td>
+                <td class="description-cell">
+                  <button class="info-btn" data-skill={skill.name}>詳細</button>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
 <style>
 .skill-navigator-container {
   position: relative;
   width: 100%;
-  height: 500px;
+  min-height: 500px;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
   border-radius: 20px;
   border: 2px solid rgba(251, 146, 60, 0.2);
   overflow: hidden;
-  perspective: 1000px;
+  padding: 20px;
+}
+
+.expand-section {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.expand-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border-radius: 25px;
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  background: rgba(30, 41, 59, 0.5);
+  color: #cbd5e1;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.expand-btn:hover {
+  border-color: rgba(251, 146, 60, 0.5);
+  background: rgba(251, 146, 60, 0.1);
+  transform: translateY(-2px);
+}
+
+.expand-btn.expanded {
+  background: rgba(251, 146, 60, 0.2);
+  border-color: rgba(251, 146, 60, 0.5);
+  color: #fb923d;
+}
+
+.expand-arrow {
+  transition: transform 0.3s ease;
+}
+
+.expand-btn.expanded .expand-arrow {
+  transform: rotate(180deg);
 }
 
 .skill-canvas {
   width: 100%;
-  height: 100%;
+  height: 460px;
   position: relative;
-  transform-style: preserve-3d;
 }
 
 .skill-space {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 400px;
+  position: relative;
+  width: 100%;
   height: 400px;
-  transform: translate(-50%, -50%) rotateX(15deg) rotateY(0deg);
-  transform-style: preserve-3d;
-  transition: transform 0.5s ease;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px 20px;
 }
 
 .skill-node {
-  position: absolute;
+  position: relative;
   width: calc(60px * var(--size));
   height: calc(60px * var(--size));
-  transform: translate3d(
-    calc(var(--x) * 60px),
-    calc(var(--y) * 60px),
-    calc(var(--z) * 60px)
-  );
+  min-width: 60px;
+  min-height: 60px;
   border-radius: 50%;
   border: 2px solid;
   cursor: pointer;
   transition: all 0.3s ease;
-  transform-style: preserve-3d;
+  flex-shrink: 0;
 }
 
 .skill-node:hover {
-  transform: translate3d(
-    calc(var(--x) * 60px),
-    calc(var(--y) * 60px),
-    calc(var(--z) * 60px + 10px)
-  ) scale(1.2);
+  transform: translateY(-8px) scale(1.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
   z-index: 10;
 }
 
@@ -212,35 +298,6 @@ const categories = {
   box-shadow: 0 0 6px #fb923d;
 }
 
-.skill-controls {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.control-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid rgba(251, 146, 60, 0.3);
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.control-btn:hover {
-  background: rgba(251, 146, 60, 0.2);
-  border-color: rgba(251, 146, 60, 0.5);
-  transform: scale(1.1);
-}
 
 .skill-legend {
   position: absolute;
@@ -327,25 +384,142 @@ const categories = {
   100% { transform: scale(1) rotate(-1deg); opacity: 1; }
 }
 
+/* Table View Styles */
+.skill-table {
+  width: 100%;
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 12px;
+  padding: 0 20px;
+  border: 1px solid rgba(251, 146, 60, 0.1);
+  margin-top: 10px;
+  max-height: 0;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  opacity: 0;
+}
+
+.skill-table.expanded {
+  max-height: 800px;
+  padding: 20px;
+  opacity: 1;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.skills-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.skills-table th {
+  background: rgba(30, 41, 59, 0.5);
+  color: #fb923d;
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  border-bottom: 2px solid rgba(251, 146, 60, 0.3);
+}
+
+.skills-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(251, 146, 60, 0.1);
+  color: white;
+}
+
+.skill-row {
+  transition: background 0.3s ease;
+}
+
+.skill-row:hover {
+  background: rgba(251, 146, 60, 0.05);
+}
+
+.skill-name-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.skill-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.skill-name {
+  font-weight: 500;
+}
+
+.category-badge {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid;
+  text-transform: capitalize;
+}
+
+.level-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.level-stars {
+  display: flex;
+  gap: 2px;
+}
+
+.star {
+  color: rgba(251, 146, 60, 0.3);
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.star.active {
+  color: #fb923d;
+  text-shadow: 0 0 6px #fb923d;
+}
+
+.level-text {
+  font-size: 12px;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.info-btn {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid rgba(251, 146, 60, 0.3);
+  background: rgba(251, 146, 60, 0.1);
+  color: #fb923d;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.info-btn:hover {
+  background: rgba(251, 146, 60, 0.2);
+  border-color: rgba(251, 146, 60, 0.5);
+}
+
 @media (max-width: 768px) {
   .skill-navigator-container {
-    height: 400px;
+    min-height: 400px;
+    padding: 16px;
+  }
+  
+  .skill-canvas {
+    height: 360px;
   }
   
   .skill-space {
-    width: 300px;
-    height: 300px;
-  }
-  
-  .skill-controls {
-    top: 10px;
-    right: 10px;
-  }
-  
-  .control-btn {
-    width: 35px;
-    height: 35px;
-    font-size: 14px;
+    gap: 15px;
+    padding: 30px 15px;
   }
   
   .skill-legend {
@@ -359,19 +533,32 @@ const categories = {
     left: 10px;
     max-width: 250px;
   }
+  
+  .expand-btn {
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+  
+  .skill-table.expanded {
+    max-height: 600px;
+    padding: 16px;
+  }
+  
+  .skills-table th,
+  .skills-table td {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
 }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const skillSpace = document.getElementById('skill-space');
   const skillNodes = document.querySelectorAll('.skill-node');
   const tooltip = document.getElementById('skill-tooltip');
-  const controls = document.querySelectorAll('.control-btn');
-  
-  let rotation = { x: 15, y: 0 };
-  let isRotating = false;
-  let mousePosition = { x: 0, y: 0 };
+  const expandBtn = document.getElementById('expand-btn');
+  const skillTable = document.getElementById('skill-table');
+  const infoBtns = document.querySelectorAll('.info-btn');
   
   const skillDescriptions = {
     "Backend Development": "サーバーサイドアプリケーションの設計・実装、API開発、データベース設計を得意とします。",
@@ -391,91 +578,27 @@ document.addEventListener('DOMContentLoaded', function() {
     "Mojo": "AI・機械学習向けの次世代プログラミング言語。Webフレームワーク開発にチャレンジ中。"
   };
   
-  // Auto rotation
-  function startAutoRotation() {
-    if (!isRotating) {
-      isRotating = true;
-      const autoRotate = () => {
-        if (isRotating) {
-          rotation.y += 0.5;
-          updateRotation();
-          requestAnimationFrame(autoRotate);
-        }
-      };
-      autoRotate();
-    }
-  }
   
-  function stopAutoRotation() {
-    isRotating = false;
-  }
-  
-  function updateRotation() {
-    skillSpace.style.transform = `translate(-50%, -50%) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`;
-  }
-  
-  // Mouse interaction
-  let isDragging = false;
-  let lastMousePosition = { x: 0, y: 0 };
-  
-  skillSpace.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    stopAutoRotation();
-    lastMousePosition = { x: e.clientX, y: e.clientY };
-    skillSpace.style.cursor = 'grabbing';
-  });
-  
-  document.addEventListener('mousemove', (e) => {
-    mousePosition = { x: e.clientX, y: e.clientY };
-    
-    if (isDragging) {
-      const deltaX = e.clientX - lastMousePosition.x;
-      const deltaY = e.clientY - lastMousePosition.y;
+  // Table expand/collapse functionality
+  if (expandBtn && skillTable) {
+    expandBtn.addEventListener('click', () => {
+      const isExpanded = skillTable.classList.contains('expanded');
+      const expandText = expandBtn.querySelector('.expand-text');
       
-      rotation.y += deltaX * 0.5;
-      rotation.x -= deltaY * 0.5;
-      rotation.x = Math.max(-60, Math.min(60, rotation.x));
-      
-      updateRotation();
-      lastMousePosition = { x: e.clientX, y: e.clientY };
-    }
-  });
+      if (isExpanded) {
+        // Collapse
+        skillTable.classList.remove('expanded');
+        expandBtn.classList.remove('expanded');
+        if (expandText) expandText.textContent = '詳細表を表示';
+      } else {
+        // Expand
+        skillTable.classList.add('expanded');
+        expandBtn.classList.add('expanded');
+        if (expandText) expandText.textContent = '詳細表を非表示';
+      }
+    });
+  }
   
-  document.addEventListener('mouseup', () => {
-    if (isDragging) {
-      isDragging = false;
-      skillSpace.style.cursor = 'grab';
-      setTimeout(startAutoRotation, 2000);
-    }
-  });
-  
-  // Touch support
-  let lastTouchPosition = { x: 0, y: 0 };
-  
-  skillSpace.addEventListener('touchstart', (e) => {
-    e.preventDefault();
-    stopAutoRotation();
-    const touch = e.touches[0];
-    lastTouchPosition = { x: touch.clientX, y: touch.clientY };
-  });
-  
-  skillSpace.addEventListener('touchmove', (e) => {
-    e.preventDefault();
-    const touch = e.touches[0];
-    const deltaX = touch.clientX - lastTouchPosition.x;
-    const deltaY = touch.clientY - lastTouchPosition.y;
-    
-    rotation.y += deltaX * 0.5;
-    rotation.x -= deltaY * 0.5;
-    rotation.x = Math.max(-60, Math.min(60, rotation.x));
-    
-    updateRotation();
-    lastTouchPosition = { x: touch.clientX, y: touch.clientY };
-  });
-  
-  skillSpace.addEventListener('touchend', () => {
-    setTimeout(startAutoRotation, 2000);
-  });
   
   // Skill node interactions
   skillNodes.forEach(node => {
@@ -503,33 +626,16 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Control buttons
-  controls.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      const action = btn.dataset.action;
-      stopAutoRotation();
+  
+  // Table info buttons
+  infoBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const skillName = btn.dataset.skill;
+      const description = skillDescriptions[skillName] || "このスキルについての詳細情報";
       
-      switch(action) {
-        case 'rotate':
-          startAutoRotation();
-          break;
-        case 'zoom-in':
-          skillSpace.style.transform += ' scale(1.2)';
-          break;
-        case 'zoom-out':
-          skillSpace.style.transform += ' scale(0.8)';
-          break;
-        case 'reset':
-          rotation = { x: 15, y: 0 };
-          skillSpace.style.transform = 'translate(-50%, -50%) rotateX(15deg) rotateY(0deg)';
-          setTimeout(startAutoRotation, 1000);
-          break;
-      }
+      // Simple alert for now - could be enhanced with a modal
+      alert(`${skillName}\n\n${description}`);
     });
   });
-  
-  // Initialize
-  skillSpace.style.cursor = 'grab';
-  setTimeout(startAutoRotation, 2000);
 });
 </script>

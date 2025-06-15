@@ -53,8 +53,10 @@ const githubUsername = "nowex35";
     <div class="language-chart" id="language-chart">
       <h4 class="chart-title">Language Distribution</h4>
       <div class="chart-container">
-        <div class="chart-bars" id="chart-bars"></div>
-        <div class="chart-legend" id="chart-legend"></div>
+        <div class="chart-visual">
+          <div class="language-bars" id="language-bars"></div>
+        </div>
+        <div class="language-details" id="language-details"></div>
       </div>
     </div>
     
@@ -175,52 +177,136 @@ const githubUsername = "nowex35";
 
 .chart-container {
   display: flex;
-  gap: 16px;
+  gap: 24px;
+  align-items: flex-start;
 }
 
-.chart-bars {
+.chart-visual {
   flex: 1;
-  height: 120px;
-  background: rgba(30, 41, 59, 0.3);
-  border-radius: 8px;
-  padding: 16px;
-  display: flex;
-  align-items: end;
-  gap: 4px;
-  overflow: hidden;
+  min-width: 0;
 }
 
-.chart-bar {
-  background: linear-gradient(to top, #fb923d, #f97316);
-  border-radius: 4px 4px 0 0;
-  min-width: 12px;
-  transition: all 0.3s ease;
+.language-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.language-bar-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.language-name {
+  min-width: 80px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+  text-align: left;
+}
+
+.language-bar {
+  flex: 1;
+  height: 20px;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 10px;
+  overflow: hidden;
   position: relative;
 }
 
-.chart-bar:hover {
-  transform: scaleY(1.1);
+.language-bar-fill {
+  height: 100%;
+  border-radius: 10px;
+  transition: width 0.8s ease;
+  position: relative;
 }
 
-.chart-legend {
-  min-width: 120px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+.language-bar-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 30%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2));
+  border-radius: 10px;
 }
 
-.legend-item {
+.language-count {
+  min-width: 40px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fb923d;
+  text-align: right;
+}
+
+.language-details {
+  min-width: 200px;
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(251, 146, 60, 0.1);
+}
+
+.details-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 16px;
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 12px;
-  color: #cbd5e1;
 }
 
-.legend-color {
-  width: 12px;
-  height: 12px;
-  border-radius: 2px;
+.language-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.language-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 8px;
+  border-left: 3px solid;
+  transition: all 0.3s ease;
+}
+
+.language-item:hover {
+  background: rgba(15, 23, 42, 0.5);
+  transform: translateX(4px);
+}
+
+.language-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.language-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.language-label {
+  font-size: 13px;
+  color: white;
+  font-weight: 500;
+}
+
+.language-percentage {
+  font-size: 12px;
+  color: #fb923d;
+  font-weight: 600;
 }
 
 .activity-title {
@@ -305,12 +391,20 @@ const githubUsername = "nowex35";
   
   .chart-container {
     flex-direction: column;
+    gap: 16px;
   }
   
-  .chart-legend {
+  .language-details {
     min-width: auto;
-    flex-direction: row;
-    flex-wrap: wrap;
+  }
+  
+  .language-name {
+    min-width: 60px;
+    font-size: 12px;
+  }
+  
+  .language-bars {
+    padding: 16px;
   }
 }
 </style>
@@ -341,14 +435,40 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
       // User info
       const userResponse = await fetch(`https://api.github.com/users/${githubUsername}`);
+      if (!userResponse.ok) {
+        if (userResponse.status === 403) {
+          throw new Error('RATE_LIMIT');
+        }
+        throw new Error(`HTTP ${userResponse.status}: ${userResponse.statusText}`);
+      }
       const userData = await userResponse.json();
+      
+      // Check for API error messages
+      if (userData.message) {
+        if (userData.message.includes('rate limit')) {
+          throw new Error('RATE_LIMIT');
+        }
+        throw new Error(userData.message);
+      }
       
       // Repositories
       const reposResponse = await fetch(`https://api.github.com/users/${githubUsername}/repos?sort=updated&per_page=100`);
+      if (!reposResponse.ok) {
+        if (reposResponse.status === 403) {
+          throw new Error('RATE_LIMIT');
+        }
+        throw new Error(`HTTP ${reposResponse.status}: ${reposResponse.statusText}`);
+      }
       const reposData = await reposResponse.json();
       
       // Recent events
       const eventsResponse = await fetch(`https://api.github.com/users/${githubUsername}/events/public?per_page=10`);
+      if (!eventsResponse.ok) {
+        if (eventsResponse.status === 403) {
+          throw new Error('RATE_LIMIT');
+        }
+        throw new Error(`HTTP ${eventsResponse.status}: ${eventsResponse.statusText}`);
+      }
       const eventsData = await eventsResponse.json();
       
       return {
@@ -357,7 +477,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         events: eventsData
       };
     } catch (error) {
-      throw new Error('Failed to fetch GitHub data');
+      console.error('GitHub API Error:', error);
+      throw error;
     }
   }
   
@@ -404,35 +525,56 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('language-primary').textContent = stats.primaryLanguage;
     
     // Render language chart
-    const chartBars = document.getElementById('chart-bars');
-    const chartLegend = document.getElementById('chart-legend');
+    const languageBars = document.getElementById('language-bars');
+    const languageDetails = document.getElementById('language-details');
     
-    chartBars.innerHTML = '';
-    chartLegend.innerHTML = '';
+    languageBars.innerHTML = '';
+    languageDetails.innerHTML = '';
     
+    const totalRepos = stats.languages.reduce((sum, [, count]) => sum + count, 0);
     const maxCount = Math.max(...stats.languages.map(([, count]) => count));
     
+    // Create horizontal bars
     stats.languages.forEach(([language, count]) => {
       const percentage = (count / maxCount) * 100;
+      const repoPercentage = ((count / totalRepos) * 100).toFixed(1);
       const color = languageColors[language] || '#fb923d';
       
-      // Create bar
-      const bar = document.createElement('div');
-      bar.className = 'chart-bar';
-      bar.style.height = `${percentage}%`;
-      bar.style.background = `linear-gradient(to top, ${color}, ${color}dd)`;
-      bar.title = `${language}: ${count} repos`;
-      chartBars.appendChild(bar);
-      
-      // Create legend item
-      const legendItem = document.createElement('div');
-      legendItem.className = 'legend-item';
-      legendItem.innerHTML = `
-        <div class="legend-color" style="background-color: ${color}"></div>
-        <span>${language} (${count})</span>
+      // Create bar item
+      const barItem = document.createElement('div');
+      barItem.className = 'language-bar-item';
+      barItem.innerHTML = `
+        <div class="language-name">${language}</div>
+        <div class="language-bar">
+          <div class="language-bar-fill" style="width: ${percentage}%; background: linear-gradient(90deg, ${color}, ${color}aa);"></div>
+        </div>
+        <div class="language-count">${count}</div>
       `;
-      chartLegend.appendChild(legendItem);
+      languageBars.appendChild(barItem);
     });
+    
+    // Create details section
+    languageDetails.innerHTML = `
+      <div class="details-title">
+        <span>📊</span>
+        詳細統計
+      </div>
+      <div class="language-list">
+        ${stats.languages.map(([language, count]) => {
+          const color = languageColors[language] || '#fb923d';
+          const repoPercentage = ((count / totalRepos) * 100).toFixed(1);
+          return `
+            <div class="language-item" style="border-left-color: ${color};">
+              <div class="language-info">
+                <div class="language-dot" style="background-color: ${color};"></div>
+                <span class="language-label">${language}</span>
+              </div>
+              <span class="language-percentage">${repoPercentage}%</span>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    `;
     
     // Render recent activity
     const activityTimeline = document.getElementById('activity-timeline');
@@ -493,16 +635,84 @@ document.addEventListener('DOMContentLoaded', async function() {
     return `${Math.floor(diffInSeconds / 86400)}d ago`;
   }
   
-  function showError() {
+  function showError(errorType = 'GENERAL') {
     loadingEl.style.display = 'none';
     contentEl.style.display = 'none';
     errorEl.style.display = 'block';
+    
+    const errorMessage = errorEl.querySelector('.error-message p');
+    const errorDetail = errorEl.querySelector('.error-detail');
+    
+    if (errorType === 'RATE_LIMIT') {
+      errorMessage.textContent = 'GitHub API レート制限に達しました';
+      errorDetail.textContent = '1時間後に再度お試しいただくか、フォールバックデータを表示します';
+      
+      // Show fallback data after 3 seconds
+      setTimeout(() => {
+        showFallbackData();
+      }, 3000);
+    } else {
+      errorMessage.textContent = 'GitHub APIの取得に失敗しました';
+      errorDetail.textContent = 'しばらく待ってから再度お試しください';
+    }
   }
   
   function showContent() {
     loadingEl.style.display = 'none';
     errorEl.style.display = 'none';
     contentEl.style.display = 'block';
+  }
+  
+  function showFallbackData() {
+    // Static fallback data when API is unavailable
+    const fallbackStats = {
+      commitCount: 45,
+      repoCount: 12,
+      starCount: 8,
+      primaryLanguage: 'Go',
+      languages: [
+        ['Go', 5],
+        ['TypeScript', 3],
+        ['Python', 2],
+        ['JavaScript', 1],
+        ['Mojo', 1]
+      ],
+      recentActivity: [
+        {
+          type: 'PushEvent',
+          repo: { name: 'nowex35/portfolio' },
+          payload: { commits: [1, 2] },
+          created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          type: 'CreateEvent',
+          repo: { name: 'nowex35/mojo-framework' },
+          payload: { ref_type: 'repository' },
+          created_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString()
+        },
+        {
+          type: 'PushEvent',
+          repo: { name: 'nowex35/event-management' },
+          payload: { commits: [1] },
+          created_at: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString()
+        }
+      ]
+    };
+    
+    renderStats(fallbackStats);
+    showContent();
+    
+    // Add fallback indicator
+    const statsTitle = document.querySelector('.stats-title');
+    if (statsTitle && !statsTitle.querySelector('.fallback-indicator')) {
+      const indicator = document.createElement('span');
+      indicator.className = 'fallback-indicator';
+      indicator.textContent = '(キャッシュデータ)';
+      indicator.style.fontSize = '12px';
+      indicator.style.color = '#64748b';
+      indicator.style.marginLeft = '8px';
+      statsTitle.appendChild(indicator);
+    }
   }
   
   // Initialize
@@ -513,7 +723,11 @@ document.addEventListener('DOMContentLoaded', async function() {
     showContent();
   } catch (error) {
     console.error('Error fetching GitHub data:', error);
-    showError();
+    if (error.message === 'RATE_LIMIT') {
+      showError('RATE_LIMIT');
+    } else {
+      showError('GENERAL');
+    }
   }
 });
 </script>
