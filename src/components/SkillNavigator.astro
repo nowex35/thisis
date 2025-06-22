@@ -334,8 +334,6 @@ const categories = {
 
 .skill-tooltip {
   position: absolute;
-  top: 20px;
-  left: 20px;
   max-width: 300px;
   background: rgba(15, 23, 42, 0.95);
   border: 1px solid rgba(251, 146, 60, 0.3);
@@ -343,8 +341,9 @@ const categories = {
   padding: 16px;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.3s ease;
+  transition: all 0.3s ease;
   backdrop-filter: blur(20px);
+  z-index: 1000;
 }
 
 .tooltip-title {
@@ -529,8 +528,6 @@ const categories = {
   }
   
   .skill-tooltip {
-    top: 10px;
-    left: 10px;
     max-width: 250px;
   }
   
@@ -607,6 +604,40 @@ document.addEventListener('DOMContentLoaded', function() {
       const skillLevel = parseInt(node.dataset.level);
       const description = skillDescriptions[skillName] || "このスキルについての詳細情報";
       
+      // Position tooltip intelligently based on node position
+      const nodeRect = node.getBoundingClientRect();
+      const containerRect = document.getElementById('skill-navigator').getBoundingClientRect();
+      const isMobile = window.innerWidth <= 768;
+      const tooltipWidth = isMobile ? 250 : 300;
+      const tooltipHeight = 150; // Approximate height
+      
+      // Calculate relative position within container
+      const relativeX = nodeRect.left - containerRect.left;
+      const relativeY = nodeRect.top - containerRect.top;
+      const containerWidth = containerRect.width;
+      const containerHeight = containerRect.height;
+      
+      let tooltipX, tooltipY;
+      
+      // Determine horizontal position
+      if (relativeX < containerWidth / 2) {
+        // Node is on left side, place tooltip on right
+        tooltipX = Math.min(relativeX + nodeRect.width + 20, containerWidth - tooltipWidth - 20);
+      } else {
+        // Node is on right side, place tooltip on left
+        tooltipX = Math.max(relativeX - tooltipWidth - 20, 20);
+      }
+      
+      // Determine vertical position
+      if (relativeY < containerHeight / 2) {
+        // Node is on top half, place tooltip below or aligned
+        tooltipY = Math.min(relativeY, containerHeight - tooltipHeight - 20);
+      } else {
+        // Node is on bottom half, place tooltip above or aligned
+        tooltipY = Math.max(relativeY - tooltipHeight + nodeRect.height, 20);
+      }
+      
+      // Update tooltip content
       tooltip.querySelector('.tooltip-title').textContent = skillName;
       
       const levelContainer = tooltip.querySelector('.tooltip-level');
@@ -618,6 +649,10 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       
       tooltip.querySelector('.tooltip-description').textContent = description;
+      
+      // Position and show tooltip
+      tooltip.style.left = tooltipX + 'px';
+      tooltip.style.top = tooltipY + 'px';
       tooltip.style.opacity = '1';
     });
     
