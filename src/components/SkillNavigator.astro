@@ -29,613 +29,119 @@ const categories = {
 };
 ---
 
-<div class="skill-navigator-container" id="skill-navigator">
-  <div class="skill-canvas" id="skill-canvas">
-    <div class="skill-space" id="skill-space">
-      {skills.map((skill, index) => {
-        const category = categories[skill.category];
-        const size = Math.max(0.8, skill.level * 0.2);
-        const intensity = skill.level * 20;
-        
-        return (
-          <div 
-            class={`skill-node ${category.bgColor} ${category.borderColor}`}
-            data-skill={skill.name}
-            data-level={skill.level}
-            data-category={skill.category}
-            style={`
-              --size: ${size};
-              --intensity: ${intensity}%;
-            `}
-          >
-            <div class={`skill-core bg-gradient-to-br ${category.color}`}>
-              <span class="skill-flame">🔥</span>
-            </div>
-            <div class="skill-label">
-              <span class="skill-name">{skill.name}</span>
-              <div class="skill-level">
-                {Array.from({ length: 5 }, (_, i) => (
-                  <span class={i < skill.level ? "active" : ""}></span>
-                ))}
-              </div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  </div>
-  
-  
-  <div class="skill-legend">
-    {Object.entries(categories).map(([key, category]) => (
-      <div class={`legend-item ${category.bgColor} ${category.borderColor}`}>
-        <div class={`legend-color bg-gradient-to-r ${category.color}`}></div>
-        <span class="legend-text">{key.charAt(0).toUpperCase() + key.slice(1)}</span>
+<div class="skill-navigator-container">
+  <div class="skills-list">
+    {skills.map((skill) => (
+      <div class="skill-item">
+        <span class="skill-name">{skill.name}</span>
+        <div class="skill-level">
+          {Array.from({ length: 5 }, (_, i) => (
+            <span class={`star ${i < skill.level ? "active" : ""}`}>★</span>
+          ))}
+        </div>
       </div>
     ))}
   </div>
-  
-  <div class="skill-tooltip" id="skill-tooltip">
-    <div class="tooltip-content">
-      <h3 class="tooltip-title"></h3>
-      <div class="tooltip-level"></div>
-      <p class="tooltip-description"></p>
-    </div>
-  </div>
-  </div>
-  
-  <!-- Expand Button -->
-  <div class="expand-section">
-    <button class="expand-btn" id="expand-btn">
-      <span class="expand-icon">📋</span>
-      <span class="expand-text">詳細表を表示</span>
-      <span class="expand-arrow">▼</span>
-    </button>
-  </div>
-  
-  <!-- Table View -->
-  <div class="skill-table" id="skill-table">
-    <div class="table-container">
-      <table class="skills-table">
-        <thead>
-          <tr>
-            <th>スキル</th>
-            <th>カテゴリ</th>
-            <th>レベル</th>
-            <th>詳細</th>
-          </tr>
-        </thead>
-        <tbody>
-          {skills.map((skill) => {
-            const category = categories[skill.category];
-            return (
-              <tr class="skill-row">
-                <td class="skill-name-cell">
-                  <div class="skill-name-wrapper">
-                    <div class={`skill-dot ${category.bgColor}`}></div>
-                    <span class="skill-name">{skill.name}</span>
-                  </div>
-                </td>
-                <td class="category-cell">
-                  <span class={`category-badge ${category.bgColor} ${category.borderColor}`}>
-                    {skill.category.charAt(0).toUpperCase() + skill.category.slice(1)}
-                  </span>
-                </td>
-                <td class="level-cell">
-                  <div class="level-display">
-                    <div class="level-stars">
-                      {Array.from({ length: 5 }, (_, i) => (
-                        <span class={`star ${i < skill.level ? "active" : ""}`}>★</span>
-                      ))}
-                    </div>
-                    <span class="level-text">{skill.level}/5</span>
-                  </div>
-                </td>
-                <td class="description-cell">
-                  <button class="info-btn" data-skill={skill.name}>詳細</button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-    </div>
-  </div>
+</div>
 </div>
 
 <style>
 .skill-navigator-container {
-  position: relative;
   width: 100%;
-  min-height: 500px;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.8) 0%, rgba(30, 41, 59, 0.8) 100%);
   border-radius: 20px;
   border: 2px solid rgba(251, 146, 60, 0.2);
-  overflow: hidden;
   padding: 20px;
+  box-sizing: border-box;
 }
 
-.expand-section {
-  display: flex;
-  justify-content: center;
-  margin: 20px 0;
+.skills-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  width: 100%;
 }
 
-.expand-btn {
+.skill-item {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  border-radius: 25px;
-  border: 1px solid rgba(251, 146, 60, 0.3);
-  background: rgba(30, 41, 59, 0.5);
-  color: #cbd5e1;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
+  padding: 12px 16px;
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 12px;
+  border: 1px solid rgba(251, 146, 60, 0.1);
   transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
 }
 
-.expand-btn:hover {
-  border-color: rgba(251, 146, 60, 0.5);
-  background: rgba(251, 146, 60, 0.1);
-  transform: translateY(-2px);
-}
-
-.expand-btn.expanded {
-  background: rgba(251, 146, 60, 0.2);
-  border-color: rgba(251, 146, 60, 0.5);
-  color: #fb923d;
-}
-
-.expand-arrow {
-  transition: transform 0.3s ease;
-}
-
-.expand-btn.expanded .expand-arrow {
-  transform: rotate(180deg);
-}
-
-.skill-canvas {
-  width: 100%;
-  height: 460px;
-  position: relative;
-}
-
-.skill-space {
-  position: relative;
-  width: 100%;
-  height: 400px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  padding: 40px 20px;
-}
-
-.skill-node {
-  position: relative;
-  width: calc(60px * var(--size));
-  height: calc(60px * var(--size));
-  min-width: 60px;
-  min-height: 60px;
-  border-radius: 50%;
-  border: 2px solid;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-}
-
-.skill-node:hover {
-  transform: translateY(-8px) scale(1.1);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-  z-index: 10;
-}
-
-.skill-core {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  box-shadow: 0 0 20px rgba(251, 146, 60, var(--intensity));
-}
-
-.skill-flame {
-  font-size: calc(20px * var(--size));
-  animation: flicker 2s ease-in-out infinite alternate;
-}
-
-.skill-label {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  margin-top: 10px;
-  text-align: center;
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  background: rgba(15, 23, 42, 0.9);
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid rgba(251, 146, 60, 0.3);
-  backdrop-filter: blur(10px);
-}
-
-.skill-node:hover .skill-label {
-  opacity: 1;
+.skill-item:hover {
+  background: rgba(251, 146, 60, 0.05);
+  border-color: rgba(251, 146, 60, 0.3);
 }
 
 .skill-name {
-  display: block;
   color: white;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  flex: 1;
 }
 
 .skill-level {
   display: flex;
   gap: 2px;
-  justify-content: center;
-}
-
-.skill-level span {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(251, 146, 60, 0.3);
-  transition: background 0.3s ease;
-}
-
-.skill-level span.active {
-  background: #fb923d;
-  box-shadow: 0 0 6px #fb923d;
-}
-
-
-.skill-legend {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  max-width: 300px;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 8px;
-  border-radius: 12px;
-  border: 1px solid;
-  backdrop-filter: blur(10px);
-}
-
-.legend-color {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.legend-text {
-  color: white;
-  font-size: 10px;
-  font-weight: 500;
-  text-transform: capitalize;
-}
-
-.skill-tooltip {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  max-width: 300px;
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(251, 146, 60, 0.3);
-  border-radius: 12px;
-  padding: 16px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  backdrop-filter: blur(20px);
-}
-
-.tooltip-title {
-  color: white;
-  font-size: 18px;
-  font-weight: 700;
-  margin-bottom: 8px;
-}
-
-.tooltip-level {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 12px;
-}
-
-.tooltip-level span {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: rgba(251, 146, 60, 0.3);
-}
-
-.tooltip-level span.active {
-  background: #fb923d;
-  box-shadow: 0 0 8px #fb923d;
-}
-
-.tooltip-description {
-  color: #cbd5e1;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-@keyframes flicker {
-  0% { transform: scale(1) rotate(0deg); opacity: 1; }
-  50% { transform: scale(1.1) rotate(2deg); opacity: 0.8; }
-  100% { transform: scale(1) rotate(-1deg); opacity: 1; }
-}
-
-/* Table View Styles */
-.skill-table {
-  width: 100%;
-  background: rgba(30, 41, 59, 0.3);
-  border-radius: 12px;
-  padding: 0 20px;
-  border: 1px solid rgba(251, 146, 60, 0.1);
-  margin-top: 10px;
-  max-height: 0;
-  overflow: hidden;
-  transition: all 0.4s ease;
-  opacity: 0;
-}
-
-.skill-table.expanded {
-  max-height: 800px;
-  padding: 20px;
-  opacity: 1;
-}
-
-.table-container {
-  overflow-x: auto;
-}
-
-.skills-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 14px;
-}
-
-.skills-table th {
-  background: rgba(30, 41, 59, 0.5);
-  color: #fb923d;
-  padding: 12px 16px;
-  text-align: left;
-  font-weight: 600;
-  border-bottom: 2px solid rgba(251, 146, 60, 0.3);
-}
-
-.skills-table td {
-  padding: 12px 16px;
-  border-bottom: 1px solid rgba(251, 146, 60, 0.1);
-  color: white;
-}
-
-.skill-row {
-  transition: background 0.3s ease;
-}
-
-.skill-row:hover {
-  background: rgba(251, 146, 60, 0.05);
-}
-
-.skill-name-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.skill-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.skill-name {
-  font-weight: 500;
-}
-
-.category-badge {
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  border: 1px solid;
-  text-transform: capitalize;
-}
-
-.level-display {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.level-stars {
-  display: flex;
-  gap: 2px;
+  margin-left: 12px;
 }
 
 .star {
   color: rgba(251, 146, 60, 0.3);
-  font-size: 16px;
+  font-size: 14px;
   transition: color 0.3s ease;
 }
 
 .star.active {
   color: #fb923d;
-  text-shadow: 0 0 6px #fb923d;
+  text-shadow: 0 0 4px #fb923d;
 }
 
-.level-text {
-  font-size: 12px;
-  color: #cbd5e1;
-  font-weight: 500;
-}
-
-.info-btn {
-  padding: 4px 8px;
-  border-radius: 6px;
-  border: 1px solid rgba(251, 146, 60, 0.3);
-  background: rgba(251, 146, 60, 0.1);
-  color: #fb923d;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.info-btn:hover {
-  background: rgba(251, 146, 60, 0.2);
-  border-color: rgba(251, 146, 60, 0.5);
-}
 
 @media (max-width: 768px) {
+  .skills-list {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
   .skill-navigator-container {
-    min-height: 400px;
     padding: 16px;
   }
   
-  .skill-canvas {
-    height: 360px;
+  .skill-item {
+    padding: 10px 14px;
   }
   
-  .skill-space {
-    gap: 15px;
-    padding: 30px 15px;
+  .skill-name {
+    font-size: 13px;
   }
   
-  .skill-legend {
-    bottom: 10px;
-    left: 10px;
-    max-width: 250px;
-  }
-  
-  .skill-tooltip {
-    top: 10px;
-    left: 10px;
-    max-width: 250px;
-  }
-  
-  .expand-btn {
-    padding: 10px 16px;
+  .star {
     font-size: 12px;
   }
-  
-  .skill-table.expanded {
-    max-height: 600px;
-    padding: 16px;
+}
+
+@media (max-width: 480px) {
+  .skill-navigator-container {
+    padding: 12px;
   }
   
-  .skills-table th,
-  .skills-table td {
+  .skill-item {
     padding: 8px 12px;
+  }
+  
+  .skill-name {
     font-size: 12px;
+  }
+  
+  .star {
+    font-size: 11px;
   }
 }
 </style>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const skillNodes = document.querySelectorAll('.skill-node');
-  const tooltip = document.getElementById('skill-tooltip');
-  const expandBtn = document.getElementById('expand-btn');
-  const skillTable = document.getElementById('skill-table');
-  const infoBtns = document.querySelectorAll('.info-btn');
-  
-  const skillDescriptions = {
-    "Backend Development": "サーバーサイドアプリケーションの設計・実装、API開発、データベース設計を得意とします。",
-    "Go": "高性能なWebアプリケーションやマイクロサービスの開発に使用。並行処理やクリーンアーキテクチャの実践。",
-    "TypeScript": "型安全なWebアプリケーション開発。React/Next.jsプロジェクトでの実用経験豊富。",
-    "Python": "FastAPIを使ったWebAPI開発、データ処理、機械学習関連のプロジェクトで活用。",
-    "Frontend Development": "React、Next.jsを中心とした現代的なフロントエンド開発。UX/UIにも配慮した実装。",
-    "React": "コンポーネント設計、状態管理、パフォーマンス最適化に精通。Hooks、Context API の活用。",
-    "Next.js": "SSR/SSG、API Routes、Image Optimizationなどの機能を活用したWebアプリケーション開発。",
-    "Infrastructure": "Docker、AWS、CI/CDパイプラインの構築・運用。インフラ as Code の実践。",
-    "Docker": "コンテナ化によるアプリケーションの可搬性向上、開発環境の標準化を実現。",
-    "AWS": "EC2、Lambda、RDS、S3等のサービスを活用したクラウドインフラの構築・運用。",
-    "Business Understanding": "要件定義から運用まで、ビジネス視点を持った技術的意思決定を行います。",
-    "FastAPI": "高性能なPython Web APIフレームワーク。自動ドキュメント生成、型安全性を活用。",
-    "PostgreSQL": "リレーショナルデータベースの設計・最適化。複雑なクエリやトランザクション処理に対応。",
-    "Redis": "キャッシュ、セッション管理、リアルタイム機能の実装でのNoSQLデータベース活用。",
-    "Mojo": "AI・機械学習向けの次世代プログラミング言語。Webフレームワーク開発にチャレンジ中。"
-  };
-  
-  
-  // Table expand/collapse functionality
-  if (expandBtn && skillTable) {
-    expandBtn.addEventListener('click', () => {
-      const isExpanded = skillTable.classList.contains('expanded');
-      const expandText = expandBtn.querySelector('.expand-text');
-      
-      if (isExpanded) {
-        // Collapse
-        skillTable.classList.remove('expanded');
-        expandBtn.classList.remove('expanded');
-        if (expandText) expandText.textContent = '詳細表を表示';
-      } else {
-        // Expand
-        skillTable.classList.add('expanded');
-        expandBtn.classList.add('expanded');
-        if (expandText) expandText.textContent = '詳細表を非表示';
-      }
-    });
-  }
-  
-  
-  // Skill node interactions
-  skillNodes.forEach(node => {
-    node.addEventListener('mouseenter', (e) => {
-      const skillName = node.dataset.skill;
-      const skillLevel = parseInt(node.dataset.level);
-      const description = skillDescriptions[skillName] || "このスキルについての詳細情報";
-      
-      tooltip.querySelector('.tooltip-title').textContent = skillName;
-      
-      const levelContainer = tooltip.querySelector('.tooltip-level');
-      levelContainer.innerHTML = '';
-      for (let i = 0; i < 5; i++) {
-        const levelSpan = document.createElement('span');
-        if (i < skillLevel) levelSpan.classList.add('active');
-        levelContainer.appendChild(levelSpan);
-      }
-      
-      tooltip.querySelector('.tooltip-description').textContent = description;
-      tooltip.style.opacity = '1';
-    });
-    
-    node.addEventListener('mouseleave', () => {
-      tooltip.style.opacity = '0';
-    });
-  });
-  
-  
-  // Table info buttons
-  infoBtns.forEach(btn => {
-    btn.addEventListener('click', () => {
-      const skillName = btn.dataset.skill;
-      const description = skillDescriptions[skillName] || "このスキルについての詳細情報";
-      
-      // Simple alert for now - could be enhanced with a modal
-      alert(`${skillName}\n\n${description}`);
-    });
-  });
-});
-</script>

@@ -52,12 +52,7 @@ const githubUsername = "nowex35";
     
     <div class="language-chart" id="language-chart">
       <h4 class="chart-title">Language Distribution</h4>
-      <div class="chart-container">
-        <div class="chart-visual">
-          <div class="language-bars" id="language-bars"></div>
-        </div>
-        <div class="language-details" id="language-details"></div>
-      </div>
+      <div class="language-summary" id="language-summary"></div>
     </div>
     
     <div class="recent-activity" id="recent-activity">
@@ -175,119 +170,35 @@ const githubUsername = "nowex35";
   margin-bottom: 16px;
 }
 
-.chart-container {
-  display: flex;
-  gap: 24px;
-  align-items: flex-start;
-}
-
-.chart-visual {
-  flex: 1;
-  min-width: 0;
-}
-
-.language-bars {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  background: rgba(30, 41, 59, 0.3);
-  border-radius: 12px;
-  padding: 20px;
-}
-
-.language-bar-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.language-name {
-  min-width: 80px;
-  font-size: 14px;
-  font-weight: 500;
-  color: white;
-  text-align: left;
-}
-
-.language-bar {
-  flex: 1;
-  height: 20px;
-  background: rgba(15, 23, 42, 0.5);
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-}
-
-.language-bar-fill {
-  height: 100%;
-  border-radius: 10px;
-  transition: width 0.8s ease;
-  position: relative;
-}
-
-.language-bar-fill::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 30%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2));
-  border-radius: 10px;
-}
-
-.language-count {
-  min-width: 40px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #fb923d;
-  text-align: right;
-}
-
-.language-details {
-  min-width: 200px;
+.language-summary {
   background: rgba(30, 41, 59, 0.3);
   border-radius: 12px;
   padding: 20px;
   border: 1px solid rgba(251, 146, 60, 0.1);
 }
 
-.details-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 16px;
+.language-tags {
   display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.language-list {
-  display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
   gap: 12px;
+  justify-content: center;
 }
 
-.language-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 8px 12px;
-  background: rgba(15, 23, 42, 0.3);
-  border-radius: 8px;
-  border-left: 3px solid;
-  transition: all 0.3s ease;
-}
-
-.language-item:hover {
-  background: rgba(15, 23, 42, 0.5);
-  transform: translateX(4px);
-}
-
-.language-info {
-  display: flex;
+.language-tag {
+  display: inline-flex;
   align-items: center;
   gap: 8px;
+  padding: 8px 16px;
+  background: rgba(15, 23, 42, 0.5);
+  border-radius: 20px;
+  border: 1px solid;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.language-tag:hover {
+  transform: translateY(-2px);
+  background: rgba(15, 23, 42, 0.7);
 }
 
 .language-dot {
@@ -297,8 +208,8 @@ const githubUsername = "nowex35";
   flex-shrink: 0;
 }
 
-.language-label {
-  font-size: 13px;
+.language-text {
+  font-size: 14px;
   color: white;
   font-weight: 500;
 }
@@ -383,28 +294,170 @@ const githubUsername = "nowex35";
 @media (max-width: 768px) {
   .github-stats-container {
     padding: 16px;
+    margin: 16px 0;
+  }
+  
+  .stats-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  
+  .stats-title {
+    font-size: 18px;
   }
   
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
   }
   
-  .chart-container {
-    flex-direction: column;
-    gap: 16px;
+  .stat-card {
+    padding: 12px;
   }
   
-  .language-details {
-    min-width: auto;
+  .stat-value {
+    font-size: 20px;
   }
   
-  .language-name {
-    min-width: 60px;
+  .stat-label {
+    font-size: 11px;
+  }
+  
+  .language-summary {
+    padding: 16px;
+  }
+  
+  .language-tags {
+    gap: 8px;
+  }
+  
+  .language-tag {
+    padding: 6px 12px;
+  }
+  
+  .language-text {
     font-size: 12px;
   }
   
-  .language-bars {
-    padding: 16px;
+  .language-percentage {
+    font-size: 10px;
+  }
+  
+  .chart-title,
+  .activity-title {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  
+  .activity-timeline {
+    max-height: 150px;
+  }
+  
+  .activity-item {
+    padding: 10px;
+  }
+  
+  .activity-message {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .github-stats-container {
+    padding: 12px;
+    border-radius: 12px;
+  }
+  
+  .stats-title {
+    font-size: 16px;
+  }
+  
+  .github-icon {
+    font-size: 20px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  
+  .stat-card {
+    padding: 10px;
+  }
+  
+  .stat-icon {
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  
+  .stat-value {
+    font-size: 18px;
+  }
+  
+  .stat-label {
+    font-size: 10px;
+  }
+  
+  .language-chart,
+  .recent-activity {
+    margin-bottom: 16px;
+  }
+  
+  .language-summary {
+    padding: 12px;
+  }
+  
+  .language-tags {
+    gap: 6px;
+    justify-content: flex-start;
+  }
+  
+  .language-tag {
+    padding: 4px 8px;
+    flex-direction: column;
+    gap: 4px;
+    text-align: center;
+    min-width: 60px;
+  }
+  
+  .language-dot {
+    width: 6px;
+    height: 6px;
+    align-self: center;
+  }
+  
+  .language-text {
+    font-size: 10px;
+  }
+  
+  .language-percentage {
+    font-size: 9px;
+  }
+  
+  .activity-timeline {
+    max-height: 120px;
+    gap: 8px;
+  }
+  
+  .activity-item {
+    padding: 8px;
+    gap: 8px;
+  }
+  
+  .activity-icon {
+    font-size: 14px;
+    width: 20px;
+  }
+  
+  .activity-message {
+    font-size: 12px;
+  }
+  
+  .activity-time {
+    font-size: 11px;
   }
 }
 </style>
@@ -524,57 +577,33 @@ document.addEventListener('DOMContentLoaded', async function() {
     document.getElementById('star-count').textContent = stats.starCount;
     document.getElementById('language-primary').textContent = stats.primaryLanguage;
     
-    // Render language chart
-    const languageBars = document.getElementById('language-bars');
-    const languageDetails = document.getElementById('language-details');
+    // Render language summary
+    const languageSummary = document.getElementById('language-summary');
     
-    languageBars.innerHTML = '';
-    languageDetails.innerHTML = '';
+    languageSummary.innerHTML = '';
     
     const totalRepos = stats.languages.reduce((sum, [, count]) => sum + count, 0);
-    const maxCount = Math.max(...stats.languages.map(([, count]) => count));
     
-    // Create horizontal bars
+    // Create language tags
+    const languageTags = document.createElement('div');
+    languageTags.className = 'language-tags';
+    
     stats.languages.forEach(([language, count]) => {
-      const percentage = (count / maxCount) * 100;
       const repoPercentage = ((count / totalRepos) * 100).toFixed(1);
       const color = languageColors[language] || '#fb923d';
       
-      // Create bar item
-      const barItem = document.createElement('div');
-      barItem.className = 'language-bar-item';
-      barItem.innerHTML = `
-        <div class="language-name">${language}</div>
-        <div class="language-bar">
-          <div class="language-bar-fill" style="width: ${percentage}%; background: linear-gradient(90deg, ${color}, ${color}aa);"></div>
-        </div>
-        <div class="language-count">${count}</div>
+      const languageTag = document.createElement('div');
+      languageTag.className = 'language-tag';
+      languageTag.style.borderColor = color;
+      languageTag.innerHTML = `
+        <div class="language-dot" style="background-color: ${color};"></div>
+        <span class="language-text">${language}</span>
+        <span class="language-percentage">${repoPercentage}%</span>
       `;
-      languageBars.appendChild(barItem);
+      languageTags.appendChild(languageTag);
     });
     
-    // Create details section
-    languageDetails.innerHTML = `
-      <div class="details-title">
-        <span>📊</span>
-        詳細統計
-      </div>
-      <div class="language-list">
-        ${stats.languages.map(([language, count]) => {
-          const color = languageColors[language] || '#fb923d';
-          const repoPercentage = ((count / totalRepos) * 100).toFixed(1);
-          return `
-            <div class="language-item" style="border-left-color: ${color};">
-              <div class="language-info">
-                <div class="language-dot" style="background-color: ${color};"></div>
-                <span class="language-label">${language}</span>
-              </div>
-              <span class="language-percentage">${repoPercentage}%</span>
-            </div>
-          `;
-        }).join('')}
-      </div>
-    `;
+    languageSummary.appendChild(languageTags);
     
     // Render recent activity
     const activityTimeline = document.getElementById('activity-timeline');

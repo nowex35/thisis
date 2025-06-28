@@ -771,14 +771,31 @@
 @media (max-width: 768px) {
   .growth-visualization {
     padding: 16px;
+    margin: 16px 0;
+  }
+  
+  .growth-header {
+    margin-bottom: 20px;
   }
   
   .growth-title {
     font-size: 20px;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .growth-icon {
+    font-size: 24px;
+  }
+  
+  .growth-subtitle {
+    font-size: 14px;
   }
   
   .visualization-tabs {
     justify-content: center;
+    margin-bottom: 24px;
+    gap: 6px;
   }
   
   .viz-tab {
@@ -786,46 +803,361 @@
     font-size: 12px;
   }
   
+  /* Timeline adjustments */
+  .timeline-container {
+    padding: 16px 0;
+  }
+  
+  .timeline-axis {
+    gap: 30px;
+  }
+  
   .timeline-axis::before {
-    left: 15px;
+    left: 12px;
+  }
+  
+  .timeline-item {
+    gap: 16px;
   }
   
   .timeline-dot {
-    width: 16px;
+    width: 14px;
+    height: 14px;
+    border-width: 2px;
+  }
+  
+  .timeline-content {
+    padding: 16px;
+  }
+  
+  .timeline-event h4 {
+    font-size: 16px;
+  }
+  
+  .timeline-event p {
+    font-size: 13px;
+  }
+  
+  .event-metrics {
+    gap: 8px;
+  }
+  
+  .metric {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+  
+  /* Skills evolution adjustments */
+  .evolution-chart {
+    gap: 20px;
+  }
+  
+  .skill-label {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  
+  .skill-progress {
     height: 16px;
+  }
+  
+  .skill-milestones {
+    height: 25px;
+    margin-top: 6px;
+  }
+  
+  .milestone {
+    font-size: 9px;
+    padding: 3px 6px;
   }
   
   .insights-grid {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
   
+  .insight-card {
+    padding: 12px;
+    gap: 8px;
+  }
+  
+  .insight-icon {
+    font-size: 20px;
+  }
+  
+  .insight-content h5 {
+    font-size: 13px;
+  }
+  
+  .insight-content p {
+    font-size: 11px;
+  }
+  
+  /* Impact matrix adjustments */
   .impact-matrix {
-    height: 300px;
+    height: 280px;
   }
   
   .y-axis {
-    width: 40px;
+    width: 35px;
+    padding: 16px 0;
+  }
+  
+  .x-axis {
+    height: 35px;
+    left: 35px;
+    padding: 0 16px;
   }
   
   .matrix-content {
-    left: 40px;
+    left: 35px;
+    bottom: 35px;
+  }
+  
+  .axis-label {
+    font-size: 10px;
+  }
+  
+  .axis-ticks {
+    font-size: 9px;
+    gap: 6px;
+  }
+  
+  .x-axis .axis-ticks {
+    gap: 12px;
   }
   
   .project-bubble {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
   }
   
   .bubble-icon {
+    font-size: 14px;
+  }
+  
+  .bubble-tooltip {
+    min-width: 120px;
+    padding: 8px;
+    bottom: 35px;
+  }
+  
+  .bubble-tooltip h5 {
+    font-size: 12px;
+  }
+  
+  .bubble-tooltip p {
+    font-size: 10px;
+  }
+  
+  .impact-metrics h4 {
     font-size: 16px;
+    margin-bottom: 12px;
   }
   
   .metrics-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+  
+  .metric-card {
+    padding: 16px;
+  }
+  
+  .metric-value {
+    font-size: 20px;
+  }
+  
+  .metric-label {
+    font-size: 11px;
   }
   
   .prediction-cards {
     grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .prediction-card {
+    padding: 16px;
+    gap: 12px;
+  }
+  
+  .prediction-icon {
+    font-size: 28px;
+  }
+  
+  .prediction-content h5 {
+    font-size: 14px;
+  }
+  
+  .prediction-content p {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .growth-visualization {
+    padding: 12px;
+    border-radius: 12px;
+  }
+  
+  .growth-title {
+    font-size: 18px;
+  }
+  
+  .growth-icon {
+    font-size: 20px;
+  }
+  
+  .growth-subtitle {
+    font-size: 13px;
+  }
+  
+  .visualization-tabs {
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  
+  .viz-tab {
+    padding: 8px 16px;
+    width: 100%;
+    text-align: center;
+  }
+  
+  /* Timeline mobile */
+  .timeline-axis {
+    gap: 24px;
+  }
+  
+  .timeline-axis::before {
+    left: 8px;
+  }
+  
+  .timeline-item {
+    gap: 12px;
+  }
+  
+  .timeline-dot {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .timeline-content {
+    padding: 12px;
+  }
+  
+  .timeline-event h4 {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  
+  .timeline-event p {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .event-metrics {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .metric {
+    font-size: 10px;
+    padding: 2px 4px;
+    align-self: flex-start;
+  }
+  
+  /* Skills evolution mobile */
+  .skill-label {
+    font-size: 13px;
+  }
+  
+  .skill-progress {
+    height: 14px;
+  }
+  
+  .milestone {
+    font-size: 8px;
+    padding: 2px 4px;
+  }
+  
+  /* Impact matrix mobile */
+  .impact-matrix {
+    height: 250px;
+  }
+  
+  .y-axis {
+    width: 30px;
+    padding: 12px 0;
+  }
+  
+  .x-axis {
+    height: 30px;
+    left: 30px;
+    padding: 0 12px;
+  }
+  
+  .matrix-content {
+    left: 30px;
+    bottom: 30px;
+  }
+  
+  .project-bubble {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .bubble-icon {
+    font-size: 12px;
+  }
+  
+  .bubble-tooltip {
+    min-width: 100px;
+    padding: 6px;
+    bottom: 30px;
+  }
+  
+  .bubble-tooltip h5 {
+    font-size: 11px;
+  }
+  
+  .bubble-tooltip p {
+    font-size: 9px;
+  }
+  
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .metric-card {
+    padding: 12px;
+  }
+  
+  .metric-value {
+    font-size: 18px;
+  }
+  
+  .metric-label {
+    font-size: 10px;
+  }
+  
+  .prediction-card {
+    padding: 12px;
+    gap: 10px;
+  }
+  
+  .prediction-icon {
+    font-size: 24px;
+  }
+  
+  .prediction-content h5 {
+    font-size: 13px;
+  }
+  
+  .prediction-content p {
+    font-size: 12px;
   }
 }
 </style>
