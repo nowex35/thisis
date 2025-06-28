@@ -1,5 +1,6 @@
 ---
 // Astro component script (runs on the server)
+import Header from '../components/Header.astro';
 import SkillNavigator from '../components/SkillNavigator.astro';
 import GitHubStats from '../components/GitHubStats.astro';
 import GrowthVisualization from '../components/GrowthVisualization.astro';
@@ -75,45 +76,7 @@ const recentDiaries = diaryEntries.slice(0, 3);
     <a href="#main" class="skip-link">Skip to main content</a>
     
     <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
-        <!-- Navigation -->
-        <nav class="fixed top-0 w-full bg-slate-900/80 backdrop-blur-md z-50 border-b border-orange-500/20">
-            <div class="max-w-6xl mx-auto px-6 py-4">
-                <div class="flex justify-between items-center">
-                    <div class="flex items-center space-x-2">
-                        <span class="text-2xl">🔥</span>
-                        <span class="text-xl font-bold text-white">{name}</span>
-                    </div>
-                    <!-- Desktop Navigation -->
-                    <div class="hidden md:flex space-x-8">
-                        <a href="#about" class="text-gray-300 hover:text-orange-400 transition-colors">About</a>
-                        <a href="#experience" class="text-gray-300 hover:text-orange-400 transition-colors">Experience</a>
-                        <a href="#projects" class="text-gray-300 hover:text-orange-400 transition-colors">Projects</a>
-                        <a href="#contact" class="text-gray-300 hover:text-orange-400 transition-colors">Contact</a>
-                        <a href="/game" class="text-gray-300 hover:text-orange-400 transition-colors">Game</a>
-                        <a href="/diary" class="text-gray-300 hover:text-orange-400 transition-colors">Diary</a>
-                    </div>
-                    
-                    <!-- Mobile Navigation Button -->
-                    <button id="mobile-menu-button" class="md:hidden text-white focus:outline-none">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            
-            <!-- Mobile Navigation Menu -->
-            <div id="mobile-menu" class="hidden md:hidden bg-slate-900/95 backdrop-blur-md border-t border-orange-500/20">
-                <div class="px-6 py-4 space-y-4">
-                    <a href="#about" class="block text-gray-300 hover:text-orange-400 transition-colors">About</a>
-                    <a href="#experience" class="block text-gray-300 hover:text-orange-400 transition-colors">Experience</a>
-                    <a href="#projects" class="block text-gray-300 hover:text-orange-400 transition-colors">Projects</a>
-                    <a href="#contact" class="block text-gray-300 hover:text-orange-400 transition-colors">Contact</a>
-                    <a href="/game" class="block text-gray-300 hover:text-orange-400 transition-colors">Game</a>
-                    <a href="/diary" class="block text-gray-300 hover:text-orange-400 transition-colors">Diary</a>
-                </div>
-            </div>
-        </nav>
+        <Header name={name} />
 
         <!-- Hero Section -->
         <main id="main">
@@ -369,7 +332,7 @@ const recentDiaries = diaryEntries.slice(0, 3);
         <section id="contact" class="py-16 sm:py-20 px-4 sm:px-6">
             <div class="max-w-4xl mx-auto text-center">
                 <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-8 sm:mb-12">
-                    <span class="border-b-4 border-orange-500 pb-2">Get In Touch</span>
+                    <span class="border-b-4 border-orange-500 pb-2">SNS</span>
                 </h2>
                 <div class="flex flex-wrap justify-center gap-4 sm:gap-8">
                     <a href="https://github.com/nowex35" class="flex items-center space-x-2 text-gray-300 hover:text-orange-400 transition-colors">
@@ -414,28 +377,6 @@ const recentDiaries = diaryEntries.slice(0, 3);
     </div>
 
     <script>
-        // Mobile menu functionality
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-        });
-
-        // Close mobile menu when clicking on links
-        document.querySelectorAll('#mobile-menu a').forEach(link => {
-            link.addEventListener('click', () => {
-                mobileMenu.classList.add('hidden');
-            });
-        });
-
-        // Close mobile menu when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!mobileMenuButton.contains(e.target) && !mobileMenu.contains(e.target)) {
-                mobileMenu.classList.add('hidden');
-            }
-        });
-
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -448,16 +389,6 @@ const recentDiaries = diaryEntries.slice(0, 3);
                     });
                 }
             });
-        });
-
-        // Add scroll effect to navigation
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 100) {
-                nav.classList.add('bg-slate-900/95');
-            } else {
-                nav.classList.remove('bg-slate-900/95');
-            }
         });
     </script>
 </body>
