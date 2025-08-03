@@ -10,6 +10,15 @@ export const prerender = true;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{pageTitle}</title>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-NEJDM86C2Y"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-NEJDM86C2Y');
+    </script>
 </head>
 <body class="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center">
     <header class="absolute top-4 left-4">
