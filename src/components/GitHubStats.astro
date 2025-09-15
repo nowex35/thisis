@@ -628,7 +628,7 @@ document.addEventListener('DOMContentLoaded', async function() {
       languageTag.style.borderColor = color;
       languageTag.innerHTML = `
         <div class="language-dot" style="background-color: ${color};"></div>
-        <span class="language-text">${language}</span>
+        <span class="language-text" style="color: #ffffff !important;">${language}</span>
         <span class="language-percentage">${repoPercentage}%</span>
       `;
       languageTags.appendChild(languageTag);
