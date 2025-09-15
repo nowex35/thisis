@@ -494,6 +494,37 @@ document.addEventListener('DOMContentLoaded', async function() {
     'Mojo': '#ff6b35'
   };
   
+  // Cache management
+  const CACHE_KEY = `github-stats-${githubUsername}`;
+  const CACHE_DURATION = 60 * 60 * 1000; // 1 hour
+  
+  function getCachedData() {
+    try {
+      const cached = localStorage.getItem(CACHE_KEY);
+      if (!cached) return null;
+      
+      const { data, timestamp } = JSON.parse(cached);
+      const isExpired = Date.now() - timestamp > CACHE_DURATION;
+      
+      return isExpired ? null : data;
+    } catch (error) {
+      console.warn('Cache read error:', error);
+      return null;
+    }
+  }
+  
+  function setCachedData(data) {
+    try {
+      const cacheEntry = {
+        data,
+        timestamp: Date.now()
+      };
+      localStorage.setItem(CACHE_KEY, JSON.stringify(cacheEntry));
+    } catch (error) {
+      console.warn('Cache write error:', error);
+    }
+  }
+
   async function fetchGitHubData() {
     try {
       // User info
@@ -534,11 +565,16 @@ document.addEventListener('DOMContentLoaded', async function() {
       }
       const eventsData = await eventsResponse.json();
       
-      return {
+      const data = {
         user: userData,
         repos: reposData,
         events: eventsData
       };
+      
+      // Cache the successful response
+      setCachedData(data);
+      
+      return data;
     } catch (error) {
       console.error('GitHub API Error:', error);
       throw error;
@@ -684,15 +720,10 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     if (errorType === 'RATE_LIMIT') {
       errorMessage.textContent = 'GitHub API レート制限に達しました';
-      errorDetail.textContent = '1時間後に再度お試しいただくか、フォールバックデータを表示します';
-      
-      // Show fallback data after 3 seconds
-      setTimeout(() => {
-        showFallbackData();
-      }, 3000);
+      errorDetail.textContent = 'キャッシュデータがある場合は表示します';
     } else {
       errorMessage.textContent = 'GitHub APIの取得に失敗しました';
-      errorDetail.textContent = 'しばらく待ってから再度お試しください';
+      errorDetail.textContent = 'キャッシュデータがある場合は表示します';
     }
   }
   
@@ -702,51 +733,17 @@ document.addEventListener('DOMContentLoaded', async function() {
     contentEl.style.display = 'block';
   }
   
-  function showFallbackData() {
-    // Static fallback data when API is unavailable
-    const fallbackStats = {
-      commitCount: 45,
-      repoCount: 12,
-      starCount: 8,
-      primaryLanguage: 'Go',
-      languages: [
-        ['Go', 5],
-        ['TypeScript', 3],
-        ['Python', 2],
-        ['JavaScript', 1],
-        ['Mojo', 1]
-      ],
-      recentActivity: [
-        {
-          type: 'PushEvent',
-          repo: { name: 'nowex35/portfolio' },
-          payload: { commits: [1, 2] },
-          created_at: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          type: 'CreateEvent',
-          repo: { name: 'nowex35/mojo-framework' },
-          payload: { ref_type: 'repository' },
-          created_at: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString()
-        },
-        {
-          type: 'PushEvent',
-          repo: { name: 'nowex35/event-management' },
-          payload: { commits: [1] },
-          created_at: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString()
-        }
-      ]
-    };
-    
-    renderStats(fallbackStats);
+  function showCachedData(data) {
+    const stats = calculateStats(data);
+    renderStats(stats);
     showContent();
     
-    // Add fallback indicator
+    // Add cache indicator
     const statsTitle = document.querySelector('.stats-title');
-    if (statsTitle && !statsTitle.querySelector('.fallback-indicator')) {
+    if (statsTitle && !statsTitle.querySelector('.cache-indicator')) {
       const indicator = document.createElement('span');
-      indicator.className = 'fallback-indicator';
-      indicator.textContent = '(キャッシュデータ)';
+      indicator.className = 'cache-indicator';
+      indicator.textContent = '(キャッシュ)';
       indicator.style.fontSize = '12px';
       indicator.style.color = '#64748b';
       indicator.style.marginLeft = '8px';
@@ -754,19 +751,33 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
   }
   
-  // Initialize
-  try {
-    const data = await fetchGitHubData();
-    const stats = calculateStats(data);
-    renderStats(stats);
-    showContent();
-  } catch (error) {
-    console.error('Error fetching GitHub data:', error);
-    if (error.message === 'RATE_LIMIT') {
-      showError('RATE_LIMIT');
-    } else {
-      showError('GENERAL');
+  // Initialize with cache-first strategy
+  async function initialize() {
+    // First, try to load from cache
+    const cachedData = getCachedData();
+    
+    if (cachedData) {
+      // Show cached data and stop here
+      showCachedData(cachedData);
+      return;
+    }
+    
+    // No cache available, fetch fresh data
+    try {
+      const data = await fetchGitHubData();
+      const stats = calculateStats(data);
+      renderStats(stats);
+      showContent();
+    } catch (error) {
+      console.error('Error fetching GitHub data:', error);
+      if (error.message === 'RATE_LIMIT') {
+        showError('RATE_LIMIT');
+      } else {
+        showError('GENERAL');
+      }
     }
   }
+  
+  initialize();
 });
 </script>

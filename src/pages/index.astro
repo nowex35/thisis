@@ -1,14 +1,13 @@
 ---
 // Astro component script (runs on the server)
 import Header from '../components/Header.astro';
-import SkillNavigator from '../components/SkillNavigator.astro';
 import GitHubStats from '../components/GitHubStats.astro';
-import GrowthVisualization from '../components/GrowthVisualization.astro';
+import Timeline from '../components/Timeline.astro';
 import '../styles/global.css';
 
 const name = "nowex35";
-const title = "Student Engineer";
-const description = "学生エンジニアです。主にバックエンドを書いていますが、フロントエンドやインフラの知識もある程度あります。";
+const title = "Japanese student engineer";
+const description = "筑波大学の学生エンジニアです。";
 const diaryEntries = await Astro.glob('./diary/*.md');
 diaryEntries.sort((a, b) => new Date(b.frontmatter.date) - new Date(a.frontmatter.date));
 const recentDiaries = diaryEntries.slice(0, 3);
@@ -86,31 +85,38 @@ const recentDiaries = diaryEntries.slice(0, 3);
     <div class="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
         <Header name={name} />
 
-        <!-- Hero Section -->
         <main id="main">
-        <section class="hero-section pt-24 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6" aria-label="Hero section">
-            <div class="max-w-6xl mx-auto text-center">
+        <section class="hero-section pt-20 sm:pt-24 pb-4 sm:pb-4 px-4 sm:px-6" aria-label="Hero section">
+            <div class="max-w-4xl mx-auto text-center">
                 <div class="relative">
-                    <h1 class="text-4xl sm:text-6xl md:text-8xl font-bold text-white mb-6">
+                    <h1 class="text-3xl sm:text-5xl md:text-6xl font-bold text-white">
                         <span class="bg-gradient-to-r from-orange-400 via-red-500 to-orange-600 bg-clip-text text-transparent">
                             {name}
                         </span>
                     </h1>
-                    <div class="absolute -top-2 -right-2 sm:-top-4 sm:-right-4 text-2xl sm:text-4xl animate-pulse">🔥</div>
+                    <div class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 text-xl sm:text-3xl animate-pulse">🔥</div>
                 </div>
-                <p class="text-lg sm:text-xl md:text-2xl text-gray-300 mb-4">{title}</p>
-                <p class="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto mb-8 px-4">{description}</p>
-                <div class="flex flex-wrap justify-center gap-2 sm:gap-4 px-4">
-                    <span class="px-3 py-2 sm:px-4 bg-orange-500/20 text-orange-300 rounded-full text-xs sm:text-sm border border-orange-500/30">Backend</span>
-                    <span class="px-3 py-2 sm:px-4 bg-red-500/20 text-red-300 rounded-full text-xs sm:text-sm border border-red-500/30">Frontend</span>
-                    <span class="px-3 py-2 sm:px-4 bg-yellow-500/20 text-yellow-300 rounded-full text-xs sm:text-sm border border-yellow-500/30">Infrastructure</span>
-                    <span class="px-3 py-2 sm:px-4 bg-orange-600/20 text-orange-300 rounded-full text-xs sm:text-sm border border-orange-600/30">Business</span>
+                <p class="text-base sm:text-lg md:text-xl text-gray-300 mb-3">{title}</p>
+                <p class="text-sm sm:text-base text-gray-400 max-w-xl mx-auto mb-3 px-4">{description}</p>
+            </div>
+        </section>
+        <section id="about" class="py-4 sm:py-8 px-4 sm:px-6">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6">
+                    <span class="border-b-2 border-orange-500 pb-1">About Me</span>
+                </h2>
+                <div class="space-y-3 sm:space-y-4">
+                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                        バックエンドを中心にwebアプリケーション開発に取り組んでいますがフロントエンドやインフラ構築にも興味があります。
+                        アプリの実装にとどまらず、そこで使われる技術にも興味がありサーバーサイドフレームワークの制作等にも取り組んでいます。
+                    </p>
+                    <p class="text-gray-300 text-sm sm:text-base leading-relaxed">
+                        将来的にスポーツビジネス領域やスモールビジネス領域を扱うITエンジニアになりたいです。
+                    </p>
                 </div>
             </div>
         </section>
-
-        <!-- Latest Diary Section -->
-        <section class="py-8 sm:py-10 px-4 sm:px-6 bg-slate-800/40">
+        <section class="py-4 sm:py-5 px-4 sm:px-6 bg-slate-800/40">
             <div class="max-w-4xl mx-auto">
                 <h2 class="text-2xl sm:text-3xl font-bold text-white mb-4 sm:mb-6">
                     <a href="/diary" class="border-b-2 border-orange-500 pb-1 hover:text-orange-400">最近の日記</a>
@@ -124,127 +130,18 @@ const recentDiaries = diaryEntries.slice(0, 3);
                         </li>
                     ))}
                 </ul>
-                
-                <!-- GitHub Stats Integration -->
+            </div>
+        </section>
+        <section class="py-4 sm:py-5 px-4 sm:px-6 bg-slate-800/40">
+            <div class="max-w-4xl mx-auto">
+                <Timeline />
+            </div>
+        </section>
+        <section class="py-4 sm:py-5 px-4 sm:px-6 bg-slate-800/40">
+            <div class="max-w-4xl mx-auto">
                 <GitHubStats />
-                
-                <!-- Growth Visualization Integration -->
-                <GrowthVisualization />
             </div>
         </section>
-
-        <!-- About Section -->
-        <section id="about" class="py-16 sm:py-20 px-4 sm:px-6">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-8 sm:mb-12 text-center">
-                    <span class="border-b-4 border-orange-500 pb-2">About Me</span>
-                </h2>
-                <div class="text-center max-w-3xl mx-auto mb-12">
-                    <p class="text-gray-300 text-base sm:text-lg leading-relaxed mb-4 sm:mb-6">
-                        バックエンドエンジニアとして、堅牢で拡張性の高いシステム設計を得意としています。
-                        同時に、フロントエンド開発、インフラ構築、ビジネス理解にも深い知見を持ち、
-                        プロダクト全体を俯瞰した開発を行います。
-                    </p>
-                    <p class="text-gray-300 text-base sm:text-lg leading-relaxed">
-                        特に、Mojoなどの最新技術にも積極的に取り組み、
-                        新規のWebフレームワークの開発や
-                        GPUプログラミングにも興味を持っています。
-                    </p>
-                </div>
-                <!-- 3D Skill Navigator Integration -->
-                <div class="bg-gradient-to-br from-orange-500/10 to-red-500/10 p-4 sm:p-8 rounded-2xl border border-orange-500/20">
-                    <h3 class="text-xl font-semibold text-white mb-4 text-center">Core Skills</h3>
-                    <SkillNavigator />
-                </div>
-            </div>
-        </section>
-
-        <!-- Experience & Education Section -->
-        <section id="experience" class="py-16 sm:py-20 px-4 sm:px-6 bg-slate-800/50">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-8 sm:mb-12 text-center">
-                    <span class="border-b-4 border-orange-500 pb-2">Experience & Education</span>
-                </h2>
-                
-                
-                <!-- Experience -->
-                <div class="mb-16">
-                    <h3 class="text-2xl font-semibold text-orange-400 mb-8 flex items-center">
-                        <span class="mr-2">💻</span> Development Experience
-                    </h3>
-                    <div class="space-y-8">
-                        <div class="bg-slate-700/30 p-6 rounded-xl border border-orange-500/20">
-                            <div class="flex justify-between items-start mb-4">
-                                <div>
-                                    <h4 class="text-xl font-semibold text-white">Full-Stack Developer</h4>
-                                    <p class="text-orange-300">with my fellows</p>
-                                </div>
-                                <span class="text-gray-400 text-sm">2025-2 - Present</span>
-                            </div>
-                            <p class="text-gray-300">
-                                実運用を目標とした学生向けイベント管理アプリの設計・実装、API開発、
-                                チーム全体の技術的意思決定にも参画。
-                            </p>
-                        </div>
-                        <div class="bg-slate-700/30 p-6 rounded-xl border border-orange-500/20">
-                            <div class="flex justify-between items-start mb-4">
-                                <div>
-                                    <h4 class="text-xl font-semibold text-white">Frontend Developer</h4>
-                                    <p class="text-orange-300">with my fellows</p>
-                                </div>
-                                <span class="text-gray-400 text-sm">2024 - 2025</span>
-                            </div>
-                            <p class="text-gray-300">
-								実行委員としても関わっている学園祭の公式ホームページを作成。
-                                要件定義からデザイン、フロントエンドの実装までを担当
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <!-- Experience -->
-                <div class="mb-16">
-                    <h3 class="text-2xl font-semibold text-orange-400 mb-8 flex items-center">
-                        <span class="mr-2">💼</span> Work Experience
-                    </h3>
-                    <div class="space-y-8">
-                        <div class="bg-slate-700/30 p-6 rounded-xl border border-orange-500/20">
-                            <div class="flex justify-between items-start mb-4">
-                                <div>
-                                    <h4 class="text-xl font-semibold text-white">Junior Engineer</h4>
-                                    <p class="text-orange-300">Tech Company</p>
-                                </div>
-                                <span class="text-gray-400 text-sm">2024-1 - 2024-8</span>
-                            </div>
-                            <p class="text-gray-300">
-                                建築関連ソフトウェアの開発に携わる。実務の現場に出社して働き、社会人エンジニアとしての働き方も学ぶ。
-                            </p>
-                        </div>
-                        
-                    </div>
-                </div>
-
-                <!-- Education -->
-                <div>
-                    <h3 class="text-2xl font-semibold text-orange-400 mb-8 flex items-center">
-                        <span class="mr-2">🎓</span> Education
-                    </h3>
-                    <div class="bg-slate-700/30 p-6 rounded-xl border border-orange-500/20">
-                        <div class="flex justify-between items-start mb-4">
-                            <div>
-                                <h4 class="text-xl font-semibold text-white">Computer Science</h4>
-                                <p class="text-orange-300">University of Tsukuba</p>
-                            </div>
-                            <span class="text-gray-400 text-sm">2023 - Present</span>
-                        </div>
-                        <p class="text-gray-300">
-                            コンピュータサイエンスの基礎から応用まで学習。
-                            アルゴリズム、データ構造、システム設計の知識を習得。
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Projects Section -->
         <section id="projects" class="py-16 sm:py-20 px-4 sm:px-6">
             <div class="max-w-6xl mx-auto">
@@ -308,17 +205,28 @@ const recentDiaries = diaryEntries.slice(0, 3);
                     <span class="border-b-4 border-orange-500 pb-2">SNS</span>
                 </h2>
                 <div class="flex flex-wrap justify-center gap-4 sm:gap-8">
-                    <a href="https://github.com/nowex35" class="flex items-center space-x-2 text-gray-300 hover:text-orange-400 transition-colors">
-                        <span class="text-2xl">📱</span>
-                        <span>GitHub</span>
+                    <a href="https://github.com/nowex35" target="_blank" rel="noopener noreferrer" 
+                       class="flex items-center space-x-3 text-gray-300 hover:text-orange-400 transition-colors group">
+                        <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                        </svg>
+                        <span class="font-medium">GitHub</span>
                     </a>
-                    <a href="https://X.com/nowex35" class="flex items-center space-x-2 text-gray-300 hover:text-orange-400 transition-colors">
-                        <span class="text-2xl">🐦</span>
-                        <span>X</span>
+                    
+                    <a href="https://x.com/nowex35" target="_blank" rel="noopener noreferrer" 
+                       class="flex items-center space-x-3 text-gray-300 hover:text-orange-400 transition-colors group">
+                        <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                        </svg>
+                        <span class="font-medium">X</span>
                     </a>
-                    <a href="https://zenn.com/nowex35" class="flex items-center space-x-2 text-gray-300 hover:text-orange-400 transition-colors">
-                        <span class="text-2xl">📘</span>
-                        <span>Zenn</span>
+                    
+                    <a href="https://zenn.dev/nowex35" target="_blank" rel="noopener noreferrer" 
+                       class="flex items-center space-x-3 text-gray-300 hover:text-orange-400 transition-colors group">
+                        <svg class="w-6 h-6 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M.264 23.771h4.984c.264 0 .498-.147.645-.381L19.614.874c.176-.293-.029-.645-.381-.645h-4.72c-.264 0-.498.147-.645.381L.249 23.39c-.176.293.029.645.381.645l-.366-.264zm23.090-10.984L20.396 8.22c-.176-.234-.44-.381-.733-.381H15.93c-.351 0-.557.352-.381.645l2.643 4.567c.176.234.44.381.733.381h3.733c.351 0 .557-.352.381-.645z"/>
+                        </svg>
+                        <span class="font-medium">Zenn</span>
                     </a>
                     <!-- <a href="mailto:contact@nowex35.dev" class="flex items-center space-x-2 text-gray-300 hover:text-orange-400 transition-colors">
                         <span class="text-2xl">📧</span>
@@ -328,18 +236,12 @@ const recentDiaries = diaryEntries.slice(0, 3);
             </div>
         </section>
 
-        <!-- Live Code Playground Section -->
-        <!-- <section class="py-16 sm:py-20 px-4 sm:px-6">
-            <div class="max-w-6xl mx-auto">
-                <LiveCodePlayground />
-            </div>
-        </section> -->
 
         <!-- Footer -->
         <footer class="py-6 sm:py-8 px-4 sm:px-6 border-t border-orange-500/20">
             <div class="max-w-6xl mx-auto text-center">
                 <p class="text-gray-400">
-                    © 2025 {name}. Built with Astro. Coded by Codex, Claude code, and Cursor.
+                    © 2025 {name}. Built with Astro.
                 </p>
             </div>
         </footer>
