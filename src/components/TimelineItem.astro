@@ -1,0 +1,167 @@
+---
+export interface Props {
+  date: string;
+  title: string;
+  description: string;
+  metrics?: string[];
+}
+
+const { date, title, description, metrics = [] } = Astro.props;
+---
+
+<div class="timeline-item" data-year={date}>
+  <div class="timeline-dot"></div>
+  <div class="timeline-content">
+    <div class="timeline-date">{date}</div>
+    <div class="timeline-event">
+      <h4>{title}</h4>
+      <p>{description}</p>
+      {metrics.length > 0 && (
+        <div class="event-metrics">
+          {metrics.map(metric => (
+            <span class="metric">{metric}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  </div>
+</div>
+
+<style>
+.timeline-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  position: relative;
+}
+
+.timeline-dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid rgba(15, 23, 42, 1);
+  background: #fb923d;
+  box-shadow: 0 0 20px rgba(251, 146, 60, 0.5);
+  position: relative;
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+.timeline-content {
+  flex: 1;
+  background: rgba(30, 41, 59, 0.5);
+  border: 1px solid rgba(251, 146, 60, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+.timeline-content:hover {
+  border-color: rgba(251, 146, 60, 0.4);
+  transform: translateY(-2px);
+}
+
+.timeline-date {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fb923d;
+  margin-bottom: 8px;
+}
+
+.timeline-event h4 {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.timeline-event p {
+  color: #cbd5e1;
+  font-size: 14px;
+  margin-bottom: 12px;
+}
+
+.event-metrics {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.metric {
+  padding: 4px 8px;
+  background: rgba(251, 146, 60, 0.1);
+  border-radius: 12px;
+  color: #fb923d;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+@media (max-width: 768px) {
+  .timeline-item {
+    gap: 16px;
+  }
+  
+  .timeline-dot {
+    width: 14px;
+    height: 14px;
+    border-width: 2px;
+  }
+  
+  .timeline-content {
+    padding: 16px;
+  }
+  
+  .timeline-event h4 {
+    font-size: 16px;
+  }
+  
+  .timeline-event p {
+    font-size: 13px;
+  }
+  
+  .event-metrics {
+    gap: 8px;
+  }
+  
+  .metric {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+}
+
+@media (max-width: 480px) {
+  .timeline-item {
+    gap: 12px;
+  }
+  
+  .timeline-dot {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .timeline-content {
+    padding: 12px;
+  }
+  
+  .timeline-event h4 {
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+  
+  .timeline-event p {
+    font-size: 12px;
+    margin-bottom: 8px;
+  }
+  
+  .event-metrics {
+    flex-direction: column;
+    gap: 6px;
+  }
+  
+  .metric {
+    font-size: 10px;
+    padding: 2px 4px;
+    align-self: flex-start;
+  }
+}
+</style>

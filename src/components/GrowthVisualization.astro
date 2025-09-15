@@ -1,151 +1,77 @@
 ---
 // AI Analysis & Growth Visualization Component
+import TimelineItem from './TimelineItem.astro';
+
+// Timeline data
+const timelineData = [
+  {
+    date: "2025-9",
+    title: "freeeサマーインターン参加",
+    description: "チームに配属され、UI改善やフィルタリング機能の実装を行った。",
+    metrics: ["フリー株式会社"]
+  },
+  {
+    date: "2025-8",
+    title: "はてなサマーインターン参加",
+    description: "Web開発に関わる講義の受講及びエンジニアからのレビュー・FBありの課題の取り組む",
+    metrics: ["株式会社はてな"]
+  },
+  {
+    date: "2024-10",
+    title: "応用情報技術者試験 合格",
+    description: "",
+    metrics: []
+  },
+  {
+    date: "2024-6",
+    title: "初のWebサイト開発/公開",
+    description: "学園祭公式サイト制作。Vueを使用したSSGサイト。",
+    metrics: ["サイト訪問者: 10000+"]
+  },
+  {
+    date: "2024-3",
+    title: "X Hackathon#2 全体2位 ",
+    description: "初めてのハッカソン参加、お題となったクライアントのニーズに合った作成物であったことを評価された。",
+    metrics: []
+  },
+  {
+    date: "2024-3",
+    title: "海外先進大学スポーツマネジメント研修@ハワイ大学マノア校",
+    description: "NCAA1部に所属するハワイ大学にてスポーツマネジメント及びスポーツビジネスについて学ぶ。これを機に、スポーツビジネス領域に興味を持つ。",
+    metrics: []
+  },
+  {
+    date: "2024",
+    title: "Webアプリ開発開始",
+    description: "Web開発の基礎学習。HTML/CSS/JavaScript",
+    metrics: []
+  },
+  {
+    date: "2023～",
+    title: "大学入学・CS学習",
+    description: "筑波大学CS専攻。アルゴリズム・データ構造の体系的学習",
+    metrics: ["GPA: 3.7"]
+  },
+];
 ---
 
 <div class="growth-visualization" id="growth-visualization">
   <div class="growth-header">
     <h3 class="growth-title">
       <span class="growth-icon">📈</span>
-      成長軌跡
+      Experience&Career
     </h3>
-    <div class="growth-subtitle">
-      技術習得とプロジェクト経験を時系列で可視化
-    </div>
   </div>
   
-  <div class="visualization-tabs">
-    <button class="viz-tab active" data-view="timeline">タイムライン</button>
-    <button class="viz-tab" data-view="skills-evolution">スキル進化</button>
-  </div>
-  
-  <div class="visualization-content">
-    <!-- Timeline View -->
-    <div class="viz-panel active" data-view="timeline">
-      <div class="timeline-container">
-        <div class="timeline-axis">
-          <div class="timeline-item" data-year="2023">
-            <div class="timeline-dot advanced"></div>
-            <div class="timeline-content">
-              <div class="timeline-date">2023</div>
-              <div class="timeline-event">
-                <h4>大学入学・CS学習</h4>
-                <p>筑波大学CS専攻。アルゴリズム・データ構造の体系的学習</p>
-                <div class="event-metrics">
-                  <span class="metric">GPA: 3.7</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="timeline-item" data-year="2020">
-            <div class="timeline-dot beginner"></div>
-            <div class="timeline-content">
-              <div class="timeline-date">2023</div>
-              <div class="timeline-event">
-                <h4>プログラミング開始</h4>
-                <p>Web開発の基礎学習。HTML/CSS/JavaScript</p>
-                <div class="event-metrics">
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="timeline-item" data-year="2021">
-            <div class="timeline-dot intermediate"></div>
-            <div class="timeline-content">
-              <div class="timeline-date">2024</div>
-              <div class="timeline-event">
-                <h4>初のWebサイト開発</h4>
-                <p>学園祭公式サイト制作。Vue導入</p>
-                <div class="event-metrics">
-                  <span class="metric">ユーザー: 10000+</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="timeline-item" data-year="2024">
-            <div class="timeline-dot expert"></div>
-            <div class="timeline-content">
-              <div class="timeline-date">2024</div>
-              <div class="timeline-event">
-                <h4>実務経験・高度技術習得</h4>
-                <p>Go、Python、インフラ技術の実践。Mojo言語への挑戦</p>
-                <div class="event-metrics">
-                  <span class="metric">実務経験: 8ヶ月</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <div class="timeline-item" data-year="2025">
-            <div class="timeline-dot master"></div>
-            <div class="timeline-content">
-              <div class="timeline-date">2025</div>
-              <div class="timeline-event">
-                <h4>フルスタック開発者</h4>
-                <p>チーム開発主導。フレームワーク開発・アーキテクチャ設計</p>
-                <div class="event-metrics">
-                  <span class="metric">チーム規模: 5人</span>
-                  <span class="metric">要件定義・設計から実装まで</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Skills Evolution View -->
-    <div class="viz-panel" data-view="skills-evolution">
-      <div class="skills-evolution">
-        <div class="evolution-chart">
-          <div class="skill-track" data-skill="backend">
-            <div class="skill-label">Backend</div>
-            <div class="skill-progress">
-              <div class="progress-bar" style="--progress: 90%; --color: #fb923d;"></div>
-            </div>
-            <div class="skill-milestones">
-              <div class="milestone" data-year="2022" style="left: 65%;">Node.js</div>
-              <div class="milestone" data-year="2024" style="left: 75%;">Go</div>
-              <div class="milestone" data-year="2024" style="left: 90%;">FastAPI</div>
-            </div>
-          </div>
-          
-          <div class="skill-track" data-skill="frontend">
-            <div class="skill-label">Frontend</div>
-            <div class="skill-progress">
-              <div class="progress-bar" style="--progress: 70%; --color: #3b82f6;"></div>
-            </div>
-            <div class="skill-milestones">
-              <div class="milestone" data-year="2021" style="left: 60%;">Vue.js</div>
-              <div class="milestone" data-year="2023" style="left: 75%;">React</div>
-            </div>
-          </div>
-          
-          <div class="skill-track" data-skill="infrastructure">
-            <div class="skill-label">Infrastructure</div>
-            <div class="skill-progress">
-              <div class="progress-bar" style="--progress: 65%; --color: #10b981;"></div>
-            </div>
-            <div class="skill-milestones">
-              <div class="milestone" data-year="2023" style="left: 70%;">Docker</div>
-              <div class="milestone" data-year="2024" style="left: 60%;">AWS</div>
-            </div>
-          </div>
-          
-          <div class="skill-track" data-skill="business">
-            <div class="skill-label">Business</div>
-            <div class="skill-progress">
-              <div class="progress-bar" style="--progress: 80%; --color: #8b5cf6;"></div>
-            </div>
-            <div class="skill-milestones">
-              <div class="milestone" data-year="2021" style="left: 50%;">要件定義</div>
-              <div class="milestone" data-year="2021" style="left: 70%;">企画</div>
-              <div class="milestone" data-year="2024" style="left: 80%;">プロダクト設計</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="timeline-axis">
+    {timelineData.map(item => (
+      <TimelineItem 
+        date={item.date}
+        title={item.title}
+        description={item.description}
+        metrics={item.metrics}
+      />
+    ))}
   </div>
 </div>
 
@@ -179,61 +105,14 @@
   font-size: 28px;
 }
 
-.growth-subtitle {
-  color: #cbd5e1;
-  font-size: 16px;
-}
 
-.visualization-tabs {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  margin-bottom: 32px;
-  flex-wrap: wrap;
-}
-
-.viz-tab {
-  padding: 8px 16px;
-  border-radius: 20px;
-  border: 1px solid rgba(251, 146, 60, 0.3);
-  background: rgba(30, 41, 59, 0.5);
-  color: #cbd5e1;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.viz-tab:hover {
-  border-color: rgba(251, 146, 60, 0.5);
-  background: rgba(251, 146, 60, 0.1);
-}
-
-.viz-tab.active {
-  background: rgba(251, 146, 60, 0.2);
-  border-color: rgba(251, 146, 60, 0.5);
-  color: #fb923d;
-}
-
-.viz-panel {
-  display: none;
-}
-
-.viz-panel.active {
-  display: block;
-}
-
-/* Timeline View */
-.timeline-container {
-  position: relative;
-  padding: 20px 0;
-}
 
 .timeline-axis {
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 40px;
+  padding: 20px 0;
 }
 
 .timeline-axis::before {
@@ -246,444 +125,10 @@
   background: linear-gradient(to bottom, #fb923d, rgba(251, 146, 60, 0.2));
 }
 
-.timeline-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 20px;
-  position: relative;
-}
 
-.timeline-dot {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  border: 3px solid rgba(15, 23, 42, 1);
-  z-index: 2;
-  position: relative;
-}
 
-.timeline-dot.beginner {
-  background: #60a5fa;
-}
 
-.timeline-dot.intermediate {
-  background: #34d399;
-}
 
-.timeline-dot.advanced {
-  background: #fbbf24;
-}
-
-.timeline-dot.expert {
-  background: #f97316;
-}
-
-.timeline-dot.master {
-  background: #fb923d;
-  box-shadow: 0 0 20px rgba(251, 146, 60, 0.5);
-}
-
-.timeline-content {
-  flex: 1;
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid rgba(251, 146, 60, 0.2);
-  border-radius: 12px;
-  padding: 20px;
-  transition: all 0.3s ease;
-}
-
-.timeline-content:hover {
-  border-color: rgba(251, 146, 60, 0.4);
-  transform: translateY(-2px);
-}
-
-.timeline-date {
-  font-size: 14px;
-  font-weight: 600;
-  color: #fb923d;
-  margin-bottom: 8px;
-}
-
-.timeline-event h4 {
-  font-size: 18px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 8px;
-}
-
-.timeline-event p {
-  color: #cbd5e1;
-  font-size: 14px;
-  margin-bottom: 12px;
-}
-
-.event-metrics {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.metric {
-  padding: 4px 8px;
-  background: rgba(251, 146, 60, 0.1);
-  border-radius: 12px;
-  color: #fb923d;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-/* Skills Evolution */
-.skills-evolution {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-.evolution-chart {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.skill-track {
-  position: relative;
-}
-
-.skill-label {
-  font-size: 16px;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 8px;
-}
-
-.skill-progress {
-  height: 20px;
-  background: rgba(30, 41, 59, 0.5);
-  border-radius: 10px;
-  overflow: hidden;
-  position: relative;
-}
-
-.progress-bar {
-  height: 100%;
-  background: linear-gradient(90deg, var(--color), rgba(var(--color), 0.6));
-  width: var(--progress);
-  border-radius: 10px;
-  transition: width 1s ease;
-  position: relative;
-}
-
-.progress-bar::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 20px;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3));
-  animation: shimmer 2s infinite;
-}
-
-.skill-milestones {
-  position: relative;
-  height: 30px;
-  margin-top: 8px;
-}
-
-.milestone {
-  position: absolute;
-  background: rgba(251, 146, 60, 0.2);
-  border: 1px solid rgba(251, 146, 60, 0.4);
-  border-radius: 8px;
-  padding: 4px 8px;
-  font-size: 10px;
-  color: #fb923d;
-  font-weight: 500;
-  white-space: nowrap;
-  transform: translateX(-50%);
-}
-
-.learning-insights {
-  background: rgba(30, 41, 59, 0.3);
-  border-radius: 12px;
-  padding: 20px;
-  border: 1px solid rgba(251, 146, 60, 0.1);
-}
-
-.learning-insights h4 {
-  font-size: 18px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 16px;
-}
-
-.insights-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
-}
-
-.insight-card {
-  display: flex;
-  gap: 12px;
-  padding: 16px;
-  background: rgba(30, 41, 59, 0.5);
-  border-radius: 8px;
-  border: 1px solid rgba(251, 146, 60, 0.2);
-}
-
-.insight-icon {
-  font-size: 24px;
-  flex-shrink: 0;
-}
-
-.insight-content h5 {
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 4px;
-}
-
-.insight-content p {
-  font-size: 12px;
-  color: #cbd5e1;
-  line-height: 1.4;
-}
-
-/* Project Impact */
-.project-impact {
-  display: flex;
-  flex-direction: column;
-  gap: 32px;
-}
-
-.impact-matrix {
-  position: relative;
-  height: 400px;
-  background: rgba(30, 41, 59, 0.3);
-  border-radius: 12px;
-  border: 1px solid rgba(251, 146, 60, 0.1);
-}
-
-.matrix-axes {
-  position: absolute;
-  inset: 0;
-}
-
-.y-axis {
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 40px;
-  width: 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 0;
-}
-
-.x-axis {
-  position: absolute;
-  bottom: 0;
-  left: 60px;
-  right: 0;
-  height: 40px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-}
-
-.axis-label {
-  font-size: 12px;
-  color: #cbd5e1;
-  font-weight: 600;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-}
-
-.x-axis .axis-label {
-  writing-mode: horizontal-tb;
-}
-
-.axis-ticks {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  font-size: 10px;
-  color: #64748b;
-}
-
-.x-axis .axis-ticks {
-  flex-direction: row;
-  gap: 16px;
-}
-
-.matrix-content {
-  position: absolute;
-  left: 60px;
-  top: 0;
-  right: 0;
-  bottom: 40px;
-}
-
-.project-bubble {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  background: rgba(251, 146, 60, 0.2);
-  border: 2px solid #fb923d;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  transform: translate(-50%, 50%);
-}
-
-.project-bubble:hover {
-  transform: translate(-50%, 50%) scale(1.2);
-  background: rgba(251, 146, 60, 0.3);
-}
-
-.bubble-icon {
-  font-size: 20px;
-}
-
-.bubble-tooltip {
-  position: absolute;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(15, 23, 42, 0.95);
-  border: 1px solid rgba(251, 146, 60, 0.3);
-  border-radius: 8px;
-  padding: 12px;
-  min-width: 150px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.project-bubble:hover .bubble-tooltip {
-  opacity: 1;
-}
-
-.bubble-tooltip h5 {
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 4px;
-}
-
-.bubble-tooltip p {
-  font-size: 12px;
-  color: #cbd5e1;
-  line-height: 1.3;
-}
-
-.impact-metrics h4 {
-  font-size: 18px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 16px;
-}
-
-.metrics-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 16px;
-}
-
-.metric-card {
-  text-align: center;
-  padding: 20px;
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid rgba(251, 146, 60, 0.2);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.metric-card:hover {
-  border-color: rgba(251, 146, 60, 0.4);
-  transform: translateY(-2px);
-}
-
-.metric-value {
-  font-size: 24px;
-  font-weight: 700;
-  color: #fb923d;
-  display: block;
-  margin-bottom: 4px;
-}
-
-.metric-label {
-  font-size: 12px;
-  color: #cbd5e1;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* AI Insights */
-.ai-insights {
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(251, 146, 60, 0.2);
-}
-
-.ai-insights h4 {
-  font-size: 18px;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 16px;
-}
-
-.prediction-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 16px;
-}
-
-.prediction-card {
-  display: flex;
-  gap: 16px;
-  padding: 20px;
-  background: rgba(30, 41, 59, 0.5);
-  border: 1px solid rgba(251, 146, 60, 0.2);
-  border-radius: 12px;
-  transition: all 0.3s ease;
-}
-
-.prediction-card:hover {
-  border-color: rgba(251, 146, 60, 0.4);
-  transform: translateY(-2px);
-}
-
-.prediction-icon {
-  font-size: 32px;
-  flex-shrink: 0;
-}
-
-.prediction-content h5 {
-  font-size: 16px;
-  font-weight: 600;
-  color: white;
-  margin-bottom: 8px;
-}
-
-.prediction-content p {
-  font-size: 14px;
-  color: #cbd5e1;
-  line-height: 1.5;
-}
-
-@keyframes shimmer {
-  0% { transform: translateX(-100%); }
-  100% { transform: translateX(100%); }
-}
 
 @media (max-width: 768px) {
   .growth-visualization {
@@ -705,211 +150,18 @@
     font-size: 24px;
   }
   
-  .growth-subtitle {
-    font-size: 14px;
-  }
-  
-  .visualization-tabs {
-    justify-content: center;
-    margin-bottom: 24px;
-    gap: 6px;
-  }
-  
-  .viz-tab {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
   
   /* Timeline adjustments */
-  .timeline-container {
-    padding: 16px 0;
-  }
-  
   .timeline-axis {
     gap: 30px;
+    padding: 16px 0;
   }
   
   .timeline-axis::before {
     left: 12px;
   }
   
-  .timeline-item {
-    gap: 16px;
-  }
   
-  .timeline-dot {
-    width: 14px;
-    height: 14px;
-    border-width: 2px;
-  }
-  
-  .timeline-content {
-    padding: 16px;
-  }
-  
-  .timeline-event h4 {
-    font-size: 16px;
-  }
-  
-  .timeline-event p {
-    font-size: 13px;
-  }
-  
-  .event-metrics {
-    gap: 8px;
-  }
-  
-  .metric {
-    font-size: 11px;
-    padding: 3px 6px;
-  }
-  
-  /* Skills evolution adjustments */
-  .evolution-chart {
-    gap: 20px;
-  }
-  
-  .skill-label {
-    font-size: 14px;
-    margin-bottom: 6px;
-  }
-  
-  .skill-progress {
-    height: 16px;
-  }
-  
-  .skill-milestones {
-    height: 25px;
-    margin-top: 6px;
-  }
-  
-  .milestone {
-    font-size: 9px;
-    padding: 3px 6px;
-  }
-  
-  .insights-grid {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  
-  .insight-card {
-    padding: 12px;
-    gap: 8px;
-  }
-  
-  .insight-icon {
-    font-size: 20px;
-  }
-  
-  .insight-content h5 {
-    font-size: 13px;
-  }
-  
-  .insight-content p {
-    font-size: 11px;
-  }
-  
-  /* Impact matrix adjustments */
-  .impact-matrix {
-    height: 280px;
-  }
-  
-  .y-axis {
-    width: 35px;
-    padding: 16px 0;
-  }
-  
-  .x-axis {
-    height: 35px;
-    left: 35px;
-    padding: 0 16px;
-  }
-  
-  .matrix-content {
-    left: 35px;
-    bottom: 35px;
-  }
-  
-  .axis-label {
-    font-size: 10px;
-  }
-  
-  .axis-ticks {
-    font-size: 9px;
-    gap: 6px;
-  }
-  
-  .x-axis .axis-ticks {
-    gap: 12px;
-  }
-  
-  .project-bubble {
-    width: 28px;
-    height: 28px;
-  }
-  
-  .bubble-icon {
-    font-size: 14px;
-  }
-  
-  .bubble-tooltip {
-    min-width: 120px;
-    padding: 8px;
-    bottom: 35px;
-  }
-  
-  .bubble-tooltip h5 {
-    font-size: 12px;
-  }
-  
-  .bubble-tooltip p {
-    font-size: 10px;
-  }
-  
-  .impact-metrics h4 {
-    font-size: 16px;
-    margin-bottom: 12px;
-  }
-  
-  .metrics-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-  
-  .metric-card {
-    padding: 16px;
-  }
-  
-  .metric-value {
-    font-size: 20px;
-  }
-  
-  .metric-label {
-    font-size: 11px;
-  }
-  
-  .prediction-cards {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-  
-  .prediction-card {
-    padding: 16px;
-    gap: 12px;
-  }
-  
-  .prediction-icon {
-    font-size: 28px;
-  }
-  
-  .prediction-content h5 {
-    font-size: 14px;
-  }
-  
-  .prediction-content p {
-    font-size: 13px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -926,23 +178,7 @@
     font-size: 20px;
   }
   
-  .growth-subtitle {
-    font-size: 13px;
-  }
   
-  .visualization-tabs {
-    flex-direction: column;
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-  
-  .viz-tab {
-    padding: 8px 16px;
-    width: 100%;
-    text-align: center;
-  }
-  
-  /* Timeline mobile */
   .timeline-axis {
     gap: 24px;
   }
@@ -951,189 +187,11 @@
     left: 8px;
   }
   
-  .timeline-item {
-    gap: 12px;
-  }
-  
-  .timeline-dot {
-    width: 12px;
-    height: 12px;
-  }
-  
-  .timeline-content {
-    padding: 12px;
-  }
-  
-  .timeline-event h4 {
-    font-size: 14px;
-    margin-bottom: 6px;
-  }
-  
-  .timeline-event p {
-    font-size: 12px;
-    margin-bottom: 8px;
-  }
-  
-  .event-metrics {
-    flex-direction: column;
-    gap: 6px;
-  }
-  
-  .metric {
-    font-size: 10px;
-    padding: 2px 4px;
-    align-self: flex-start;
-  }
-  
-  /* Skills evolution mobile */
-  .skill-label {
-    font-size: 13px;
-  }
-  
-  .skill-progress {
-    height: 14px;
-  }
-  
-  .milestone {
-    font-size: 8px;
-    padding: 2px 4px;
-  }
-  
-  /* Impact matrix mobile */
-  .impact-matrix {
-    height: 250px;
-  }
-  
-  .y-axis {
-    width: 30px;
-    padding: 12px 0;
-  }
-  
-  .x-axis {
-    height: 30px;
-    left: 30px;
-    padding: 0 12px;
-  }
-  
-  .matrix-content {
-    left: 30px;
-    bottom: 30px;
-  }
-  
-  .project-bubble {
-    width: 24px;
-    height: 24px;
-  }
-  
-  .bubble-icon {
-    font-size: 12px;
-  }
-  
-  .bubble-tooltip {
-    min-width: 100px;
-    padding: 6px;
-    bottom: 30px;
-  }
-  
-  .bubble-tooltip h5 {
-    font-size: 11px;
-  }
-  
-  .bubble-tooltip p {
-    font-size: 9px;
-  }
-  
-  .metrics-grid {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-  
-  .metric-card {
-    padding: 12px;
-  }
-  
-  .metric-value {
-    font-size: 18px;
-  }
-  
-  .metric-label {
-    font-size: 10px;
-  }
-  
-  .prediction-card {
-    padding: 12px;
-    gap: 10px;
-  }
-  
-  .prediction-icon {
-    font-size: 24px;
-  }
-  
-  .prediction-content h5 {
-    font-size: 13px;
-  }
-  
-  .prediction-content p {
-    font-size: 12px;
-  }
 }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-  const vizTabs = document.querySelectorAll('.viz-tab');
-  const vizPanels = document.querySelectorAll('.viz-panel');
-  
-  // Tab switching
-  vizTabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      const targetView = tab.dataset.view;
-      
-      // Update active tab
-      vizTabs.forEach(t => t.classList.remove('active'));
-      tab.classList.add('active');
-      
-      // Update active panel
-      vizPanels.forEach(panel => {
-        panel.classList.remove('active');
-        if (panel.dataset.view === targetView) {
-          panel.classList.add('active');
-        }
-      });
-      
-      // Trigger animations for the new panel
-      if (targetView === 'skills-evolution') {
-        animateSkillBars();
-      } else if (targetView === 'project-impact') {
-        animateProjectBubbles();
-      }
-    });
-  });
-  
-  // Animate skill progress bars
-  function animateSkillBars() {
-    const progressBars = document.querySelectorAll('.progress-bar');
-    progressBars.forEach(bar => {
-      const width = bar.style.getPropertyValue('--progress');
-      bar.style.setProperty('--progress', '0%');
-      
-      setTimeout(() => {
-        bar.style.setProperty('--progress', width);
-      }, 100);
-    });
-  }
-  
-  // Animate project bubbles
-  function animateProjectBubbles() {
-    const bubbles = document.querySelectorAll('.project-bubble');
-    bubbles.forEach((bubble, index) => {
-      bubble.style.transform = 'translate(-50%, 50%) scale(0)';
-      
-      setTimeout(() => {
-        bubble.style.transform = 'translate(-50%, 50%) scale(1)';
-      }, index * 200);
-    });
-  }
   
   // Intersection Observer for timeline animation
   const observeTimeline = () => {
@@ -1141,22 +199,22 @@ document.addEventListener('DOMContentLoaded', function() {
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.style.opacity = '1';
-          entry.target.style.transform = 'translateY(0)';
+          (entry.target as HTMLElement).style.opacity = '1';
+          (entry.target as HTMLElement).style.transform = 'translateY(0)';
         }
       });
     }, { threshold: 0.3 });
     
     timelineItems.forEach((item, index) => {
-      item.style.opacity = '0';
-      item.style.transform = 'translateY(20px)';
-      item.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
+      const element = item as HTMLElement;
+      element.style.opacity = '0';
+      element.style.transform = 'translateY(20px)';
+      element.style.transition = `opacity 0.6s ease ${index * 0.1}s, transform 0.6s ease ${index * 0.1}s`;
       observer.observe(item);
     });
   };
   
   // Initialize animations
-  setTimeout(animateSkillBars, 1000);
   observeTimeline();
 });
 </script>
