@@ -2,16 +2,41 @@
 import '../styles/global.css';
 
 export interface Props {
-  title: string;
+  title?: string;
+  frontmatter?: {
+    title: string;
+    date: string;
+  };
 }
-const { title } = Astro.props;
+
+const { title, frontmatter } = Astro.props;
 const name = "nowex35";
+
+// マークダウンファイルからの場合はfrontmatter.titleを使用、
+// 直接呼び出しの場合はtitleを使用
+const pageTitle = frontmatter?.title || title || "日記";
 ---
 <html lang="ja">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>{title} - {name}</title>
+  <title>{pageTitle} - {name}</title>
+  
+  <!-- SEO Meta Tags -->
+  <meta name="description" content={`${name}の日記: ${pageTitle}`} />
+  <meta name="author" content={name} />
+  
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content={`${pageTitle} - ${name}`} />
+  <meta property="og:description" content={`${name}の日記: ${pageTitle}`} />
+  <meta property="og:type" content="article" />
+  {frontmatter?.date && <meta property="article:published_time" content={frontmatter.date} />}
+  
+  <!-- Twitter Meta Tags -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={`${pageTitle} - ${name}`} />
+  <meta name="twitter:description" content={`${name}の日記: ${pageTitle}`} />
+  
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NEJDM86C2Y"></script>
   <script>
