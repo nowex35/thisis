@@ -1,5 +1,4 @@
 ---
-// AI Analysis & Growth Visualization Component
 import TimelineItem from './TimelineItem.astro';
 
 // Timeline data
@@ -111,8 +110,6 @@ const timelineData = [
   font-size: 28px;
 }
 
-
-
 .timeline-axis {
   position: relative;
   display: flex;
@@ -130,11 +127,6 @@ const timelineData = [
   width: 2px;
   background: linear-gradient(to bottom, #fb923d, rgba(251, 146, 60, 0.2));
 }
-
-
-
-
-
 
 @media (max-width: 768px) {
   .growth-visualization {
@@ -156,7 +148,6 @@ const timelineData = [
     font-size: 24px;
   }
   
-  
   /* Timeline adjustments */
   .timeline-axis {
     gap: 30px;
@@ -166,8 +157,6 @@ const timelineData = [
   .timeline-axis::before {
     left: 12px;
   }
-  
-  
 }
 
 @media (max-width: 480px) {
@@ -184,7 +173,6 @@ const timelineData = [
     font-size: 20px;
   }
   
-  
   .timeline-axis {
     gap: 24px;
   }
@@ -192,7 +180,6 @@ const timelineData = [
   .timeline-axis::before {
     left: 8px;
   }
-  
 }
 </style>
 

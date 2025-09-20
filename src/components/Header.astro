@@ -1,13 +1,12 @@
 ---
 export interface Props {
     name?: string;
-    className?: string;
 }
 
-const { name = "nowex35", className = "" } = Astro.props;
+const { name = "nowex35" } = Astro.props;
 ---
 
-<nav class={`fixed top-0 w-full bg-slate-900/80 backdrop-blur-md z-50 border-b border-orange-500/20 ${className}`}>
+<nav class="fixed top-0 w-full bg-slate-900/80 backdrop-blur-md z-50 border-b border-orange-500/20">
     <div class="max-w-6xl mx-auto px-6 py-4">
         <div class="flex justify-between items-center">
             <div class="flex items-center space-x-2">
