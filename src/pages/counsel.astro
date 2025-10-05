@@ -1,0 +1,180 @@
+---
+import '../styles/global.css';
+
+const name = "nowex35";
+---
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>悩み事相談 - {name}</title>
+
+  <meta name="description" content={`${name}への悩み事相談フォーム`} />
+  <meta name="author" content={name} />
+
+  <meta property="og:title" content={`悩み事相談 - ${name}`} />
+  <meta property="og:description" content={`${name}への悩み事相談フォーム`} />
+  <meta property="og:type" content="website" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={`悩み事相談 - ${name}`} />
+  <meta name="twitter:description" content={`${name}への悩み事相談フォーム`} />
+
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NEJDM86C2Y"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-NEJDM86C2Y');
+  </script>
+</head>
+<body class="min-h-screen bg-slate-900 text-white p-8">
+  <header class="mb-8">
+    <nav class="flex space-x-4">
+      <a href="/" class="text-orange-400 hover:text-orange-300">Home</a>
+    </nav>
+  </header>
+  <main class="max-w-3xl mx-auto">
+    <div class="text-center mb-8">
+      <h1 class="text-5xl font-bold mb-4">悩み事相談</h1>
+    </div>
+
+    <div class="container">
+      <p class="text-gray-400 mb-6 text-center text-sm">
+        あなたの悩み事を聞かせてください。<br />
+        投稿された内容は私（nowex35）だけが見ることができます。公開されることはありません。
+      </p>
+
+      <form action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSeEqeg5ORLEm-GmlOwVX_ml3bEKWdWt-0EgrFuN0V80Kh2ymg/formResponse" method="POST" target="hidden_iframe" id="counselForm">
+        <label>
+          お名前(任意)<br>
+          <input name="entry.2132051425" class="TextBox" placeholder="お名前の記入は任意です。"></input>
+        </label>
+        <label>
+          悩み事の内容<span class="text-red-400">*</span><br>
+          <textarea name="entry.804188675" class="TextBox" placeholder="お悩みの内容を自由にお書きください。" rows="8" required></textarea>
+        </label>
+        <button type="submit" class="btn">送信</button>
+      </form>
+    </div>
+  </main>
+  <div id="toast" class="toast">送信しました</div>
+  <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+  <script>
+    const form = document.getElementById('counselForm');
+    if (form) {
+      form.addEventListener('submit', function() {
+        setTimeout(function() {
+          const toast = document.getElementById('toast');
+          if (toast) {
+            toast.classList.add('show');
+            setTimeout(function() {
+              window.location.href = '/counsel';
+            }, 1000);
+          }
+        }, 1000);
+      });
+    }
+  </script>
+</body>
+</html>
+
+<style>
+  .container {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 30px;
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.1);
+    border-radius: 12px;
+    background-color: rgba(30, 41, 59, 0.5);
+    backdrop-filter: blur(10px);
+  }
+
+  .TextBox {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 12px;
+    border: 1px solid rgba(249, 115, 22, 0.3);
+    border-radius: 6px;
+    font-size: 16px;
+    background-color: rgba(15, 23, 42, 0.5);
+    color: white;
+    box-sizing: border-box;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+
+  .TextBox::placeholder {
+    color: rgba(156, 163, 175, 0.7);
+  }
+
+  .TextBox:focus {
+    outline: none;
+    border-color: #fb923c;
+    box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
+  }
+
+  .btn {
+    width: 100%;
+    background-color: #ea580c;
+    color: white;
+    padding: 15px;
+    border: none;
+    border-radius: 6px;
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.1s;
+    cursor: pointer;
+  }
+
+  .btn:hover {
+    background-color: #fb923c;
+    transform: translateY(-2px);
+  }
+
+  .btn:active {
+    transform: translateY(0);
+  }
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #f3f4f6;
+  }
+
+  input,
+  textarea {
+    box-sizing: border-box;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 150px;
+  }
+
+  .toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #10b981;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
