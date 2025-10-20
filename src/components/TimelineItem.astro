@@ -51,34 +51,38 @@ const { date, title, description, metrics = [] } = Astro.props;
   flex: 1;
   background: rgba(30, 41, 59, 0.5);
   border: 1px solid rgba(251, 146, 60, 0.2);
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 16px;
+  padding: 24px;
   transition: all 0.3s ease;
 }
 
 .timeline-content:hover {
-  border-color: rgba(251, 146, 60, 0.4);
-  transform: translateY(-2px);
+  border-color: rgba(251, 146, 60, 0.6);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(251, 146, 60, 0.15);
 }
 
 .timeline-date {
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   color: #fb923d;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  letter-spacing: 0.02em;
 }
 
 .timeline-event h4 {
-  font-size: 18px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 900;
   color: white;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
 }
 
 .timeline-event p {
   color: #cbd5e1;
-  font-size: 14px;
-  margin-bottom: 12px;
+  font-size: 16px;
+  margin-bottom: 16px;
+  line-height: 1.6;
 }
 
 .event-metrics {
@@ -88,12 +92,12 @@ const { date, title, description, metrics = [] } = Astro.props;
 }
 
 .metric {
-  padding: 4px 8px;
-  background: rgba(251, 146, 60, 0.1);
-  border-radius: 12px;
+  padding: 6px 12px;
+  background: rgba(251, 146, 60, 0.15);
+  border-radius: 16px;
   color: #fb923d;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
 }
 
 @media (max-width: 768px) {
